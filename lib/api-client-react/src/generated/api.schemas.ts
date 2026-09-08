@@ -326,6 +326,182 @@ export interface Provider {
   winRate?: number | null;
 }
 
+export interface IncomingMessageInput {
+  /** @nullable */
+  externalMessageId?: string | null;
+  /** @minLength 1 */
+  rawText: string;
+  /** @nullable */
+  receivedAt?: string | null;
+}
+
+export type IncomingMessageResultProcessingStatus = typeof IncomingMessageResultProcessingStatus[keyof typeof IncomingMessageResultProcessingStatus];
+
+
+export const IncomingMessageResultProcessingStatus = {
+  RECEIVED: 'RECEIVED',
+  NON_SIGNAL: 'NON_SIGNAL',
+  SIGNAL_CREATED: 'SIGNAL_CREATED',
+  DUPLICATE: 'DUPLICATE',
+  REJECTED: 'REJECTED',
+  ANALYSIS_FAILED: 'ANALYSIS_FAILED',
+} as const;
+
+export type IncomingMessageResultClassification = typeof IncomingMessageResultClassification[keyof typeof IncomingMessageResultClassification];
+
+
+export const IncomingMessageResultClassification = {
+  PENDING: 'PENDING',
+  NON_SIGNAL: 'NON_SIGNAL',
+  POTENTIAL_SIGNAL: 'POTENTIAL_SIGNAL',
+} as const;
+
+export interface IncomingMessageResult {
+  messageId: string;
+  processingStatus: IncomingMessageResultProcessingStatus;
+  classification: IncomingMessageResultClassification;
+  /** @nullable */
+  signalId?: string | null;
+  /** @nullable */
+  duplicateOf?: string | null;
+  /** @nullable */
+  reason?: string | null;
+}
+
+export type SignalDetailDirection = typeof SignalDetailDirection[keyof typeof SignalDetailDirection];
+
+
+export const SignalDetailDirection = {
+  BUY: 'BUY',
+  SELL: 'SELL',
+} as const;
+
+export type SignalDetailStatus = typeof SignalDetailStatus[keyof typeof SignalDetailStatus];
+
+
+export const SignalDetailStatus = {
+  POTENTIAL: 'POTENTIAL',
+  ANALYZING: 'ANALYZING',
+  VALIDATED: 'VALIDATED',
+  REJECTED: 'REJECTED',
+  DUPLICATE: 'DUPLICATE',
+  CONFLICT: 'CONFLICT',
+} as const;
+
+export type UserSignalDecisionEligibilityStatus = typeof UserSignalDecisionEligibilityStatus[keyof typeof UserSignalDecisionEligibilityStatus];
+
+
+export const UserSignalDecisionEligibilityStatus = {
+  PENDING: 'PENDING',
+  ELIGIBLE: 'ELIGIBLE',
+  BLOCKED: 'BLOCKED',
+  EXECUTION_REQUESTED: 'EXECUTION_REQUESTED',
+} as const;
+
+export type UserSignalDecisionExecutionMode = typeof UserSignalDecisionExecutionMode[keyof typeof UserSignalDecisionExecutionMode];
+
+
+export const UserSignalDecisionExecutionMode = {
+  MANUAL: 'MANUAL',
+  AUTOMATED: 'AUTOMATED',
+} as const;
+
+export interface UserSignalDecision {
+  eligibilityStatus: UserSignalDecisionEligibilityStatus;
+  eligible: boolean;
+  riskApproved: boolean;
+  executionMode: UserSignalDecisionExecutionMode;
+  /** @nullable */
+  reason?: string | null;
+}
+
+export interface SignalDetail {
+  id: string;
+  symbol: string;
+  direction: SignalDetailDirection;
+  entryType?: string;
+  /** @nullable */
+  entry?: number | null;
+  /** @nullable */
+  stopLoss?: number | null;
+  /** @nullable */
+  takeProfit1?: number | null;
+  /** @nullable */
+  takeProfit2?: number | null;
+  /** @nullable */
+  takeProfit3?: number | null;
+  /** @nullable */
+  timeframe?: string | null;
+  status: SignalDetailStatus;
+  source: string;
+  /** @nullable */
+  confidence: number | null;
+  receivedAt: string;
+  decision: UserSignalDecision;
+}
+
+export type SignalReplayEventPayload = { [key: string]: unknown };
+
+export interface SignalReplayEvent {
+  id: string;
+  eventType: string;
+  createdAt: string;
+  payload: SignalReplayEventPayload;
+}
+
+export type ExecutionRequestInputEnvironment = typeof ExecutionRequestInputEnvironment[keyof typeof ExecutionRequestInputEnvironment];
+
+
+export const ExecutionRequestInputEnvironment = {
+  DEMO: 'DEMO',
+  LIVE: 'LIVE',
+} as const;
+
+export interface ExecutionRequestInput {
+  /** @nullable */
+  brokerAccountId?: string | null;
+  environment?: ExecutionRequestInputEnvironment;
+}
+
+export type ExecutionRequestEnvironment = typeof ExecutionRequestEnvironment[keyof typeof ExecutionRequestEnvironment];
+
+
+export const ExecutionRequestEnvironment = {
+  DEMO: 'DEMO',
+  LIVE: 'LIVE',
+} as const;
+
+export type ExecutionRequestStatus = typeof ExecutionRequestStatus[keyof typeof ExecutionRequestStatus];
+
+
+export const ExecutionRequestStatus = {
+  REQUESTED: 'REQUESTED',
+  BLOCKED: 'BLOCKED',
+  SENT: 'SENT',
+  ACCEPTED: 'ACCEPTED',
+  FAILED: 'FAILED',
+} as const;
+
+export interface ExecutionRequest {
+  id: string;
+  signalId: string;
+  environment: ExecutionRequestEnvironment;
+  status: ExecutionRequestStatus;
+  /** @nullable */
+  blockReason: string | null;
+  requestedAt?: string;
+}
+
+export interface AuditLog {
+  id: string;
+  action: string;
+  resourceType: string;
+  /** @nullable */
+  resourceId?: string | null;
+  result: string;
+  createdAt: string;
+}
+
 export type ListSignalsParams = {
 status?: ListSignalsStatus;
 /**

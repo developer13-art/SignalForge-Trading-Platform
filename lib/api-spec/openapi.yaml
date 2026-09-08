@@ -216,6 +216,96 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Provider"
+  /signal-sources/{id}/messages:
+    post:
+      operationId: ingestSignalSourceMessage
+      tags: [signals]
+      summary: Ingest one raw source message into the SignalForge pipeline
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncomingMessageInput"
+      responses:
+        "201":
+          description: Message accepted and processed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomingMessageResult"
+        "404":
+          description: Source not found
+  /signals/{id}:
+    get:
+      operationId: getSignalDetail
+      tags: [signals]
+      summary: Get a normalized signal and its user-specific decision
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+      responses:
+        "200":
+          description: Signal detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignalDetail"
+        "404":
+          description: Signal not found
+  /signals/{id}/replay:
+    get:
+      operationId: getSignalReplay
+      tags: [signals]
+      summary: Replay the processing trail for a signal
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+      responses:
+        "200":
+          description: Signal replay events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SignalReplayEvent"
+  /signals/{id}/execute:
+    post:
+      operationId: requestSignalExecution
+      tags: [signals]
+      summary: Request manual execution for a risk-approved signal
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExecutionRequestInput"
+      responses:
+        "201":
+          description: Execution request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecutionRequest"
+        "409":
+          description: Execution blocked by validation, risk, account, or integration state
+  /audit:
+    get:
+      operationId: listAuditLogs
+      tags: [dashboard]
+      summary: List the authenticated user's audit trail
+      responses:
+        "200":
+          description: Audit trail
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLog"
 components:
   parameters:
     ResourceId:
@@ -402,4 +492,101 @@ components:
           enum: [PENDING, ACTIVE, SUSPENDED]
         followers: { type: integer }
         winRate: { type: ["number", "null"] }
+    IncomingMessageInput:
+      type: object
+      required: [rawText]
+      properties:
+        externalMessageId: { type: ["string", "null"] }
+        rawText: { type: string, minLength: 1 }
+        receivedAt: { type: ["string", "null"], format: date-time }
+    IncomingMessageResult:
+      type: object
+      required: [messageId, processingStatus, classification]
+      properties:
+        messageId: { type: string }
+        processingStatus:
+          type: string
+          enum: [RECEIVED, NON_SIGNAL, SIGNAL_CREATED, DUPLICATE, REJECTED, ANALYSIS_FAILED]
+        classification:
+          type: string
+          enum: [PENDING, NON_SIGNAL, POTENTIAL_SIGNAL]
+        signalId: { type: ["string", "null"] }
+        duplicateOf: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+    SignalDetail:
+      type: object
+      required: [id, symbol, direction, status, source, confidence, receivedAt, decision]
+      properties:
+        id: { type: string }
+        symbol: { type: string }
+        direction:
+          type: string
+          enum: [BUY, SELL]
+        entryType: { type: string }
+        entry: { type: ["number", "null"] }
+        stopLoss: { type: ["number", "null"] }
+        takeProfit1: { type: ["number", "null"] }
+        takeProfit2: { type: ["number", "null"] }
+        takeProfit3: { type: ["number", "null"] }
+        timeframe: { type: ["string", "null"] }
+        status:
+          type: string
+          enum: [POTENTIAL, ANALYZING, VALIDATED, REJECTED, DUPLICATE, CONFLICT]
+        source: { type: string }
+        confidence: { type: ["number", "null"] }
+        receivedAt: { type: string, format: date-time }
+        decision:
+          $ref: "#/components/schemas/UserSignalDecision"
+    UserSignalDecision:
+      type: object
+      required: [eligibilityStatus, eligible, riskApproved, executionMode]
+      properties:
+        eligibilityStatus:
+          type: string
+          enum: [PENDING, ELIGIBLE, BLOCKED, EXECUTION_REQUESTED]
+        eligible: { type: boolean }
+        riskApproved: { type: boolean }
+        executionMode:
+          type: string
+          enum: [MANUAL, AUTOMATED]
+        reason: { type: ["string", "null"] }
+    SignalReplayEvent:
+      type: object
+      required: [id, eventType, createdAt, payload]
+      properties:
+        id: { type: string }
+        eventType: { type: string }
+        createdAt: { type: string, format: date-time }
+        payload: { type: object, additionalProperties: true }
+    ExecutionRequestInput:
+      type: object
+      properties:
+        brokerAccountId: { type: ["string", "null"] }
+        environment:
+          type: string
+          enum: [DEMO, LIVE]
+    ExecutionRequest:
+      type: object
+      required: [id, signalId, environment, status, blockReason]
+      properties:
+        id: { type: string }
+        signalId: { type: string }
+        environment:
+          type: string
+          enum: [DEMO, LIVE]
+        status:
+          type: string
+          enum: [REQUESTED, BLOCKED, SENT, ACCEPTED, FAILED]
+        blockReason: { type: ["string", "null"] }
+        requestedAt: { type: string, format: date-time }
+    AuditLog:
+      type: object
+      required: [id, action, resourceType, result, createdAt]
+      properties:
+        id: { type: string }
+        action: { type: string }
+        resourceType: { type: string }
+        resourceId: { type: ["string", "null"] }
+        result: { type: string }
+        createdAt: { type: string, format: date-time }
 

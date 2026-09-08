@@ -258,3 +258,113 @@ export const ListProvidersResponseItem = zod.object({
 export const ListProvidersResponse = zod.array(ListProvidersResponseItem)
 
 
+/**
+ * @summary Ingest one raw source message into the SignalForge pipeline
+ */
+export const IngestSignalSourceMessageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const IngestSignalSourceMessageBody = zod.object({
+  "externalMessageId": zod.string().nullish(),
+  "rawText": zod.string().min(1),
+  "receivedAt": zod.coerce.date().nullish()
+})
+
+export const IngestSignalSourceMessageResponse = zod.object({
+  "messageId": zod.string(),
+  "processingStatus": zod.enum(['RECEIVED', 'NON_SIGNAL', 'SIGNAL_CREATED', 'DUPLICATE', 'REJECTED', 'ANALYSIS_FAILED']),
+  "classification": zod.enum(['PENDING', 'NON_SIGNAL', 'POTENTIAL_SIGNAL']),
+  "signalId": zod.string().nullish(),
+  "duplicateOf": zod.string().nullish(),
+  "reason": zod.string().nullish()
+})
+
+
+/**
+ * @summary Get a normalized signal and its user-specific decision
+ */
+export const GetSignalDetailParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSignalDetailResponse = zod.object({
+  "id": zod.string(),
+  "symbol": zod.string(),
+  "direction": zod.enum(['BUY', 'SELL']),
+  "entryType": zod.string().optional(),
+  "entry": zod.number().nullish(),
+  "stopLoss": zod.number().nullish(),
+  "takeProfit1": zod.number().nullish(),
+  "takeProfit2": zod.number().nullish(),
+  "takeProfit3": zod.number().nullish(),
+  "timeframe": zod.string().nullish(),
+  "status": zod.enum(['POTENTIAL', 'ANALYZING', 'VALIDATED', 'REJECTED', 'DUPLICATE', 'CONFLICT']),
+  "source": zod.string(),
+  "confidence": zod.number().nullable(),
+  "receivedAt": zod.coerce.date(),
+  "decision": zod.object({
+  "eligibilityStatus": zod.enum(['PENDING', 'ELIGIBLE', 'BLOCKED', 'EXECUTION_REQUESTED']),
+  "eligible": zod.boolean(),
+  "riskApproved": zod.boolean(),
+  "executionMode": zod.enum(['MANUAL', 'AUTOMATED']),
+  "reason": zod.string().nullish()
+})
+})
+
+
+/**
+ * @summary Replay the processing trail for a signal
+ */
+export const GetSignalReplayParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSignalReplayResponseItem = zod.object({
+  "id": zod.string(),
+  "eventType": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "payload": zod.record(zod.string(), zod.unknown())
+})
+export const GetSignalReplayResponse = zod.array(GetSignalReplayResponseItem)
+
+
+/**
+ * @summary Request manual execution for a risk-approved signal
+ */
+export const RequestSignalExecutionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RequestSignalExecutionBody = zod.object({
+  "brokerAccountId": zod.string().nullish(),
+  "environment": zod.enum(['DEMO', 'LIVE']).optional()
+})
+
+export const RequestSignalExecutionResponse = zod.object({
+  "id": zod.string(),
+  "signalId": zod.string(),
+  "environment": zod.enum(['DEMO', 'LIVE']),
+  "status": zod.enum(['REQUESTED', 'BLOCKED', 'SENT', 'ACCEPTED', 'FAILED']),
+  "blockReason": zod.string().nullable(),
+  "requestedAt": zod.coerce.date().optional()
+})
+
+
+/**
+ * @summary List the authenticated user's audit trail
+ */
+export const ListAuditLogsResponseItem = zod.object({
+  "id": zod.string(),
+  "action": zod.string(),
+  "resourceType": zod.string(),
+  "resourceId": zod.string().nullish(),
+  "result": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAuditLogsResponse = zod.array(ListAuditLogsResponseItem)
+
+

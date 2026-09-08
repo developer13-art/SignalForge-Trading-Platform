@@ -22,14 +22,21 @@ import type {
 import type {
   ActivityItem,
   AnalyticsOverview,
+  AuditLog,
   BrokerAccount,
   DashboardSummary,
+  ExecutionRequest,
+  ExecutionRequestInput,
   HealthStatus,
+  IncomingMessageInput,
+  IncomingMessageResult,
   ListSignalsParams,
   Provider,
   RiskProfile,
   RiskProfileUpdate,
   Signal,
+  SignalDetail,
+  SignalReplayEvent,
   SignalSource,
   SignalSourceInput,
   SignalSourceUpdate
@@ -965,6 +972,381 @@ export function useListProviders<TData = Awaited<ReturnType<typeof listProviders
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListProvidersQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getIngestSignalSourceMessageUrl = (id: string,) => {
+
+
+
+
+  return `/api/signal-sources/${id}/messages`
+}
+
+/**
+ * @summary Ingest one raw source message into the SignalForge pipeline
+ */
+export const ingestSignalSourceMessage = async (id: string,
+    incomingMessageInput: IncomingMessageInput, options?: Parameters<typeof customFetch>[1]): Promise<IncomingMessageResult> => {
+
+  return customFetch<IncomingMessageResult>(getIngestSignalSourceMessageUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(incomingMessageInput)
+  }
+);}
+
+
+
+
+
+export const getIngestSignalSourceMessageMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ingestSignalSourceMessage>>, TError,{id: string;data: BodyType<IncomingMessageInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof ingestSignalSourceMessage>>, TError,{id: string;data: BodyType<IncomingMessageInput>}, TContext> => {
+
+const mutationKey = ['ingestSignalSourceMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ingestSignalSourceMessage>>, {id: string;data: BodyType<IncomingMessageInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  ingestSignalSourceMessage(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IngestSignalSourceMessageMutationResult = NonNullable<Awaited<ReturnType<typeof ingestSignalSourceMessage>>>
+    export type IngestSignalSourceMessageMutationBody = BodyType<IncomingMessageInput>
+    export type IngestSignalSourceMessageMutationError = ErrorType<void>
+
+    /**
+ * @summary Ingest one raw source message into the SignalForge pipeline
+ */
+export const useIngestSignalSourceMessage = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ingestSignalSourceMessage>>, TError,{id: string;data: BodyType<IncomingMessageInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof ingestSignalSourceMessage>>,
+        TError,
+        {id: string;data: BodyType<IncomingMessageInput>},
+        TContext
+      > => {
+      return useMutation(getIngestSignalSourceMessageMutationOptions(options));
+    }
+
+export const getGetSignalDetailUrl = (id: string,) => {
+
+
+
+
+  return `/api/signals/${id}`
+}
+
+/**
+ * @summary Get a normalized signal and its user-specific decision
+ */
+export const getSignalDetail = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<SignalDetail> => {
+
+  return customFetch<SignalDetail>(getGetSignalDetailUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSignalDetailQueryKey = (id: string,) => {
+    return [
+    `/api/signals/${id}`
+    ] as const;
+    }
+
+
+export const getGetSignalDetailQueryOptions = <TData = Awaited<ReturnType<typeof getSignalDetail>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSignalDetail>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSignalDetailQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSignalDetail>>> = ({ signal }) => getSignalDetail(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSignalDetail>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSignalDetailQueryResult = NonNullable<Awaited<ReturnType<typeof getSignalDetail>>>
+export type GetSignalDetailQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a normalized signal and its user-specific decision
+ */
+
+export function useGetSignalDetail<TData = Awaited<ReturnType<typeof getSignalDetail>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSignalDetail>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSignalDetailQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetSignalReplayUrl = (id: string,) => {
+
+
+
+
+  return `/api/signals/${id}/replay`
+}
+
+/**
+ * @summary Replay the processing trail for a signal
+ */
+export const getSignalReplay = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<SignalReplayEvent[]> => {
+
+  return customFetch<SignalReplayEvent[]>(getGetSignalReplayUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSignalReplayQueryKey = (id: string,) => {
+    return [
+    `/api/signals/${id}/replay`
+    ] as const;
+    }
+
+
+export const getGetSignalReplayQueryOptions = <TData = Awaited<ReturnType<typeof getSignalReplay>>, TError = ErrorType<unknown>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSignalReplay>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSignalReplayQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSignalReplay>>> = ({ signal }) => getSignalReplay(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSignalReplay>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSignalReplayQueryResult = NonNullable<Awaited<ReturnType<typeof getSignalReplay>>>
+export type GetSignalReplayQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Replay the processing trail for a signal
+ */
+
+export function useGetSignalReplay<TData = Awaited<ReturnType<typeof getSignalReplay>>, TError = ErrorType<unknown>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSignalReplay>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSignalReplayQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRequestSignalExecutionUrl = (id: string,) => {
+
+
+
+
+  return `/api/signals/${id}/execute`
+}
+
+/**
+ * @summary Request manual execution for a risk-approved signal
+ */
+export const requestSignalExecution = async (id: string,
+    executionRequestInput?: ExecutionRequestInput, options?: Parameters<typeof customFetch>[1]): Promise<ExecutionRequest> => {
+
+  return customFetch<ExecutionRequest>(getRequestSignalExecutionUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(executionRequestInput)
+  }
+);}
+
+
+
+
+
+export const getRequestSignalExecutionMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestSignalExecution>>, TError,{id: string;data?: BodyType<ExecutionRequestInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestSignalExecution>>, TError,{id: string;data?: BodyType<ExecutionRequestInput>}, TContext> => {
+
+const mutationKey = ['requestSignalExecution'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestSignalExecution>>, {id: string;data?: BodyType<ExecutionRequestInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  requestSignalExecution(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestSignalExecutionMutationResult = NonNullable<Awaited<ReturnType<typeof requestSignalExecution>>>
+    export type RequestSignalExecutionMutationBody = BodyType<ExecutionRequestInput> | undefined
+    export type RequestSignalExecutionMutationError = ErrorType<void>
+
+    /**
+ * @summary Request manual execution for a risk-approved signal
+ */
+export const useRequestSignalExecution = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestSignalExecution>>, TError,{id: string;data?: BodyType<ExecutionRequestInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestSignalExecution>>,
+        TError,
+        {id: string;data?: BodyType<ExecutionRequestInput>},
+        TContext
+      > => {
+      return useMutation(getRequestSignalExecutionMutationOptions(options));
+    }
+
+export const getListAuditLogsUrl = () => {
+
+
+
+
+  return `/api/audit`
+}
+
+/**
+ * @summary List the authenticated user's audit trail
+ */
+export const listAuditLogs = async ( options?: Parameters<typeof customFetch>[1]): Promise<AuditLog[]> => {
+
+  return customFetch<AuditLog[]>(getListAuditLogsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAuditLogsQueryKey = () => {
+    return [
+    `/api/audit`
+    ] as const;
+    }
+
+
+export const getListAuditLogsQueryOptions = <TData = Awaited<ReturnType<typeof listAuditLogs>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAuditLogs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAuditLogsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAuditLogs>>> = ({ signal }) => listAuditLogs({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAuditLogs>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAuditLogsQueryResult = NonNullable<Awaited<ReturnType<typeof listAuditLogs>>>
+export type ListAuditLogsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List the authenticated user's audit trail
+ */
+
+export function useListAuditLogs<TData = Awaited<ReturnType<typeof listAuditLogs>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAuditLogs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAuditLogsQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
