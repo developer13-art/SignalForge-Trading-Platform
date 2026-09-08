@@ -1,0 +1,6 @@
+<svg width="160" height="40" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="40" height="40" rx="12" fill="#C9F24B"/>
+  <path d="M12 20.2L17.4 14.8L22.8 20.2L28 15" stroke="#252A3B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="28" cy="15" r="2.3" fill="#252A3B"/>
+  <text x="51" y="26" fill="#252A3B" font-family="Space Grotesk, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.6">SignalForge</text>
+</svg>

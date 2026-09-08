@@ -1,0 +1,2715 @@
+You are the lead software architect, senior full-stack engineer, UI/UX designer, security engineer, DevOps engineer, and database engineer responsible for building a complete production-oriented SaaS platform called:
+
+SIGNALFORGE
+
+Tagline:
+"Intelligent Signals. Automated Execution. Smarter Trading."
+
+============================================================
+1. PRODUCT DEFINITION
+============================================================
+
+SignalForge is a multi-tenant trading intelligence and automation SaaS platform.
+
+The platform connects users' supported trading accounts/brokers, signal sources, AI signal-processing systems, risk-management engines, trading automation, provider/trader marketplaces, analytics, referrals, subscriptions, KYC, wallets, notifications, support, and administrative/business intelligence systems into one unified platform.
+
+SignalForge should NOT be built as a simple dashboard, demo, landing page, or MVP.
+
+Build the application as a serious production-oriented SaaS foundation with:
+
+- Real authentication
+- PostgreSQL database
+- Proper backend APIs
+- Role-based authorization
+- KYC workflow
+- Subscription system
+- Referral system
+- Wallet system
+- Signal ingestion
+- AI signal processing architecture
+- Signal normalization
+- Provider DNA
+- Risk management engine
+- Broker integration architecture
+- MetaApi integration
+- Trading execution architecture
+- Telegram signal-source architecture
+- Discord integration architecture
+- WhatsApp integration architecture
+- TradingView webhook integration
+- Email signal ingestion architecture
+- REST API signal ingestion
+- Analytics
+- Provider marketplace
+- Trader marketplace
+- Provider certification
+- Affiliate/IB system
+- White-label architecture
+- Notifications
+- Admin dashboard
+- Compliance dashboard
+- Executive/business intelligence dashboard
+- Support system
+- Replay/debugging system
+- Audit logging
+- Security controls
+
+Do not simplify the requested system into an MVP.
+
+Build the complete architecture and UI foundation.
+
+============================================================
+2. TECHNOLOGY STACK
+============================================================
+
+FRONTEND:
+
+- React
+- TypeScript
+- Vite
+- React Router
+- Tailwind CSS
+- shadcn/ui or another professional component system
+- Lucide React icons
+- TanStack Query for server state
+- React Hook Form
+- Zod
+- Recharts or another professional chart library
+- Responsive design
+
+BACKEND:
+
+- Node.js
+- Express.js
+- TypeScript
+- REST API
+- WebSocket support where required
+- Zod validation
+- JWT/session-based authentication
+- bcrypt/argon2 password hashing
+- structured logging
+
+DATABASE:
+
+- PostgreSQL
+- Prisma ORM OR Drizzle ORM
+
+Use migrations.
+
+Do not use SQLite as the production database.
+
+Do not create hardcoded database data.
+
+PAYMENTS:
+
+Create a payment-provider abstraction so providers such as Paystack and Stripe can be integrated cleanly.
+
+KYC:
+
+Create a KYC-provider abstraction.
+
+TRADING:
+
+Create a broker adapter architecture.
+
+MetaApi should be implemented as the primary MetaTrader integration adapter.
+
+SIGNAL SOURCES:
+
+Create provider adapters for:
+
+- Telegram
+- Discord
+- WhatsApp
+- TradingView Webhooks
+- REST API
+- Email
+
+AI:
+
+Create an AI provider abstraction.
+
+Do not hardcode API keys.
+
+============================================================
+3. CRITICAL DEVELOPMENT RULE
+============================================================
+
+DO NOT USE SEED DATA.
+
+The application must start with an empty database.
+
+Do not populate fake:
+
+- users
+- trades
+- signals
+- providers
+- referrals
+- payments
+- subscriptions
+- KYC records
+- broker accounts
+- notifications
+- analytics
+
+Instead, build professional empty states.
+
+Examples:
+
+"No trading accounts connected yet."
+
+"No signals received yet."
+
+"No providers available yet."
+
+"No referral earnings yet."
+
+"Complete KYC verification to unlock this feature."
+
+"Connect your broker to start monitoring your account."
+
+The UI must still look complete and professional when there is no data.
+
+============================================================
+4. IMPORTANT IMPLEMENTATION RULE
+============================================================
+
+DO NOT create fake functionality behind buttons.
+
+Every important button must either:
+
+1. Call a real backend endpoint,
+2. Open a real workflow/modal,
+3. Navigate to a real page,
+4. Trigger a real state transition,
+5. Or clearly show that the required external integration has not been configured.
+
+Do not use fake setTimeout() simulations pretending to be backend operations.
+
+Do not hardcode successful payment responses.
+
+Do not fake KYC approval.
+
+Do not fake broker connection.
+
+Do not fake signal processing.
+
+Do not fake trade execution.
+
+Build proper service interfaces and integration adapters.
+
+External credentials must come from environment variables.
+
+============================================================
+5. DESIGN LANGUAGE
+============================================================
+
+Create a premium fintech/trading SaaS interface.
+
+The design should feel comparable to modern products such as:
+
+- Stripe
+- Linear
+- Vercel
+- TradingView
+- Coinbase
+- Ramp
+- modern institutional trading dashboards
+
+Do NOT copy their UI.
+
+Use them only as inspiration for quality.
+
+DESIGN STYLE:
+
+- Premium
+- Clean
+- Modern
+- Professional
+- Technical
+- Trustworthy
+- Minimal
+- Data-driven
+- High-end SaaS
+
+PRIMARY THEME:
+
+Dark-first interface.
+
+Suggested visual direction:
+
+Background:
+#070B14
+#0B1120
+#111827
+
+Panels:
+#111827
+#151D2E
+
+Borders:
+subtle gray/blue borders
+
+Primary accent:
+electric blue
+
+Secondary accent:
+violet/indigo
+
+Positive:
+green
+
+Warning:
+amber
+
+Danger:
+red
+
+Typography:
+
+Use Inter, Geist, or a similar modern sans-serif.
+
+Avoid excessive gradients.
+
+Avoid excessive glassmorphism.
+
+Avoid cartoon illustrations.
+
+Avoid unnecessary animations.
+
+Use subtle animations only where they improve UX.
+
+Cards should have:
+
+- 12–16px radius
+- subtle borders
+- subtle shadows
+- clean spacing
+
+============================================================
+6. GLOBAL LAYOUT
+============================================================
+
+PUBLIC WEBSITE:
+
+Top navigation:
+
+SignalForge logo
+
+Navigation:
+
+- How It Works
+- Features
+- Pricing
+- Enterprise
+- Marketplace
+- Security
+- About
+
+Actions:
+
+- Login
+- Get Started
+
+Authenticated application:
+
+Desktop layout:
+
+LEFT SIDEBAR
+------------------------------------------------
+
+SignalForge logo
+
+Overview
+
+Trading
+Signal Center
+Signal Sources
+AI Intelligence
+Risk & Automation
+Brokers & Accounts
+Analytics
+
+Marketplace
+
+Provider Marketplace
+Trader Marketplace
+
+Business
+
+Provider Platform
+Certification
+Affiliate & IB
+
+Finance
+
+Subscriptions
+Wallet
+Referral & Rewards
+
+System
+
+Notifications
+Settings
+
+Bottom:
+
+Help & Support
+
+User profile
+
+MAIN CONTENT
+------------------------------------------------
+
+Top header:
+
+- page title
+- breadcrumbs
+- search
+- notifications
+- account status
+- user avatar
+
+Main content area:
+
+Responsive.
+
+Sidebar should collapse on smaller screens.
+
+============================================================
+7. ACCOUNT ROLES
+============================================================
+
+Implement proper RBAC.
+
+Roles should include:
+
+USER
+TRADER
+PROVIDER
+AFFILIATE
+IB
+ADMIN
+COMPLIANCE_ADMIN
+SUPPORT_AGENT
+EXECUTIVE
+WHITE_LABEL_ADMIN
+SUPER_ADMIN
+
+Users may have multiple capabilities depending on their account configuration.
+
+Never rely only on frontend role checks.
+
+Authorization must also be enforced on backend APIs.
+
+============================================================
+8. KYC SYSTEM
+============================================================
+
+KYC is a mandatory security/compliance gate.
+
+Users must complete KYC before:
+
+- subscribing
+- connecting certain financial services
+- activating trading automation
+- using referral earning features
+- withdrawing eligible funds
+- accessing restricted platform functionality
+
+Create KYC states:
+
+NOT_STARTED
+PENDING
+UNDER_REVIEW
+VERIFIED
+REJECTED
+SUSPENDED
+EXPIRED
+RESUBMISSION_REQUIRED
+
+Supported identity document types:
+
+- National ID / plastic ID card
+- Voter's card
+- Driver's license
+- Passport
+- Other configured identity documents
+
+KYC workflow:
+
+1. KYC introduction
+2. Personal information
+3. Select document type
+4. Upload document
+5. Document verification
+6. Selfie/liveness verification
+7. Review
+8. Result
+
+If KYC is incomplete:
+
+Display a persistent account status banner:
+
+"Account Not Verified"
+
+with:
+
+"Complete KYC verification to unlock restricted features."
+
+Clicking restricted features should open the KYC workflow.
+
+Implement:
+
+- document metadata
+- encrypted/private storage architecture
+- verification provider abstraction
+- review workflow
+- rejection reasons
+- resubmission
+- audit logs
+- expiration
+- compliance flags
+
+Never expose identity documents publicly.
+
+============================================================
+9. AUTHENTICATION
+============================================================
+
+Implement:
+
+- Register
+- Login
+- Logout
+- Email verification
+- Phone verification
+- Forgot password
+- Reset password
+- Account recovery
+- Session management
+- Device management
+- Two-factor authentication
+- 2FA verification
+- Security alerts
+
+Support:
+
+- secure password hashing
+- access token
+- refresh token/session rotation
+- secure cookies where appropriate
+- CSRF protection where applicable
+- rate limiting
+- brute-force protection
+- device/session revocation
+
+Never store passwords in plaintext.
+
+============================================================
+10. BROKER SYSTEM
+============================================================
+
+Create a broker account abstraction.
+
+A user can connect multiple supported trading accounts.
+
+Each broker connection should contain:
+
+- broker
+- account ID
+- account type
+- platform
+- server
+- connection status
+- balance
+- equity
+- margin
+- free margin
+- leverage
+- currency
+- last synchronization
+- connection logs
+
+Support:
+
+MT4
+MT5
+
+PRIMARY INTEGRATION:
+
+MetaApi.
+
+Create:
+
+BrokerAdapter interface
+
+MetaApiAdapter
+
+Future adapters can implement the same interface.
+
+MetaApi credentials must NEVER be exposed to the frontend.
+
+Backend handles MetaApi authentication.
+
+The frontend communicates only with SignalForge's backend.
+
+============================================================
+11. TRADING ACCOUNT TYPES
+============================================================
+
+Users must be able to distinguish:
+
+- Demo account
+- Live/Real account
+
+Before automation is enabled:
+
+Show clear warnings and confirmation.
+
+Store:
+
+account_mode = DEMO | LIVE
+
+Do not allow accidental live automation.
+
+============================================================
+12. SIGNAL SOURCES
+============================================================
+
+SignalForge receives trading messages from multiple sources.
+
+Supported sources:
+
+Telegram
+Discord
+WhatsApp
+TradingView
+REST API
+Email
+
+Create a normalized SignalSource model.
+
+Each source has:
+
+- source type
+- name
+- status
+- credentials/configuration
+- channels
+- last message
+- connection status
+- created date
+- processing status
+
+============================================================
+13. TELEGRAM USER SESSION
+============================================================
+
+Implement Telegram source architecture using a dedicated backend service.
+
+The user should be able to connect a Telegram account/session and select channels/groups they are authorized to monitor.
+
+Architecture:
+
+Telegram Client
+        ↓
+Telegram Listener
+        ↓
+Message Queue
+        ↓
+Message Normalizer
+        ↓
+AI Signal Parser
+        ↓
+Signal Validation
+        ↓
+Duplicate Detection
+        ↓
+Consensus Engine
+        ↓
+Risk Engine
+        ↓
+Execution Engine
+        ↓
+Broker/MetaApi
+
+IMPORTANT:
+
+Never expose Telegram session credentials to the frontend.
+
+Store sensitive session information securely.
+
+Respect Telegram's policies and user authorization.
+
+Do not scrape unauthorized/private channels.
+
+============================================================
+14. SIGNAL INGESTION ENGINE
+============================================================
+
+Every incoming source message must pass through a standardized pipeline.
+
+Pipeline:
+
+RAW MESSAGE
+↓
+SOURCE VALIDATION
+↓
+MESSAGE NORMALIZATION
+↓
+LANGUAGE DETECTION
+↓
+AI PARSING
+↓
+SIGNAL EXTRACTION
+↓
+SYMBOL NORMALIZATION
+↓
+ENTRY EXTRACTION
+↓
+STOP LOSS EXTRACTION
+↓
+TAKE PROFIT EXTRACTION
+↓
+DIRECTION DETECTION
+↓
+TIMEFRAME DETECTION
+↓
+CONFIDENCE CALCULATION
+↓
+PROVIDER DNA ANALYSIS
+↓
+DUPLICATE DETECTION
+↓
+CONSENSUS ENGINE
+↓
+RISK ENGINE
+↓
+EXECUTION DECISION
+↓
+TRADE EXECUTION
+↓
+TRADE MONITORING
+↓
+ANALYTICS
+
+Signals should support:
+
+BUY
+SELL
+
+Optional:
+
+ENTRY
+ENTRY RANGE
+STOP LOSS
+TAKE PROFIT 1
+TAKE PROFIT 2
+TAKE PROFIT 3
+TIMEFRAME
+CONFIDENCE
+RISK LEVEL
+PROVIDER
+SOURCE
+TIMESTAMP
+
+============================================================
+15. AI SIGNAL INTELLIGENCE
+============================================================
+
+Create an AI processing architecture.
+
+AI should analyze incoming messages and determine whether they represent:
+
+- trading signal
+- market commentary
+- news
+- analysis
+- trade update
+- take-profit update
+- stop-loss update
+- cancellation
+- unrelated message
+
+Extract structured information.
+
+Example normalized internal object:
+
+{
+  symbol,
+  direction,
+  entry,
+  stopLoss,
+  takeProfits,
+  timeframe,
+  confidence,
+  riskLevel,
+  provider,
+  source,
+  timestamp
+}
+
+Do not rely solely on AI.
+
+AI output must pass validation rules.
+
+Implement:
+
+- confidence engine
+- risk intelligence
+- multilingual processing
+- consensus engine
+- duplicate detection
+- AI processing logs
+- AI model performance
+- learning history
+
+============================================================
+16. PROVIDER DNA
+============================================================
+
+Provider DNA learns patterns from provider messages.
+
+Track:
+
+- language profile
+- abbreviations
+- symbol mappings
+- entry terminology
+- stop-loss terminology
+- take-profit terminology
+- trade management behavior
+- risk behavior
+- average risk/reward
+- signal frequency
+- typical timeframes
+- learned patterns
+- confidence
+- DNA version history
+
+Provider DNA pages:
+
+DNA Overview
+Provider Language Profile
+Symbol Mapping
+Abbreviation Mapping
+Trade Management Rules
+Risk Behavior
+Learned Patterns
+DNA Confidence
+DNA Version History
+Training Messages
+Provider DNA Test
+
+============================================================
+17. DUPLICATE SIGNAL DETECTION
+============================================================
+
+The same trade may arrive from multiple channels.
+
+Create a fingerprinting system.
+
+Signals can be grouped using:
+
+- symbol
+- direction
+- entry
+- SL
+- TP
+- timeframe
+- provider
+- timestamp window
+
+Display:
+
+Original Signal
+
+Duplicate Signals
+
+Consensus Signals
+
+Rejected Signals
+
+============================================================
+18. CONSENSUS ENGINE
+============================================================
+
+When multiple providers produce similar signals:
+
+Group them.
+
+Example:
+
+EURUSD BUY
+
+Provider A
+Provider B
+Provider C
+
+Calculate:
+
+- number of agreeing providers
+- confidence
+- risk
+- provider quality
+- signal age
+
+Generate a consensus score.
+
+Make the algorithm configurable.
+
+============================================================
+19. RISK MANAGEMENT
+============================================================
+
+Create a dedicated risk engine.
+
+Rules:
+
+- max risk per trade
+- max daily loss
+- max drawdown
+- max open trades
+- max exposure
+- max correlated exposure
+- trading sessions
+- provider-specific limits
+- symbol-specific limits
+- emergency stop
+
+Additional features:
+
+- trailing stop
+- break-even
+- profit lock
+- partial close
+- correlation protection
+- news filter
+- emergency stop
+
+============================================================
+20. AUTOMATION RULE ENGINE
+============================================================
+
+Implement:
+
+IF / THEN
+
+rules.
+
+Example:
+
+IF
+signal.confidence >= threshold
+
+AND
+
+signal.risk <= allowedRisk
+
+AND
+
+account.dailyLoss < dailyLimit
+
+THEN
+
+execute trade
+
+Rules must be stored in PostgreSQL.
+
+Users should be able to create, edit, enable and disable automation rules.
+
+============================================================
+21. TRADE EXECUTION
+============================================================
+
+Execution flow:
+
+Signal approved
+↓
+Risk validation
+↓
+Account validation
+↓
+Market validation
+↓
+Execution request
+↓
+MetaApi/Broker
+↓
+Execution result
+↓
+Trade record
+↓
+Monitoring
+↓
+Position updates
+↓
+Analytics
+
+Record every execution event.
+
+Possible states:
+
+PENDING
+APPROVED
+REJECTED
+SUBMITTED
+EXECUTED
+PARTIALLY_FILLED
+FAILED
+CANCELLED
+CLOSED
+
+============================================================
+22. TRADING FEATURES
+============================================================
+
+Create:
+
+Trading Overview
+Open Positions
+Trade History
+Trade Details
+Pending Orders
+Closed Trades
+Manual Interventions
+Trade Events
+Trade Timeline
+Trade Shadow
+Trade Replay
+Execution History
+
+============================================================
+23. SIGNAL CENTER
+============================================================
+
+Pages:
+
+Live Signals
+Signal History
+Signal Details
+Processing Timeline
+Signal Confidence
+Signal Risk Analysis
+Provider Signals
+Duplicate Signals
+Consensus Signals
+Rejected Signals
+Signal Replay
+
+Use real-time WebSocket updates where appropriate.
+
+============================================================
+24. ANALYTICS
+============================================================
+
+Build professional analytics.
+
+Metrics:
+
+- P&L
+- equity curve
+- drawdown
+- win rate
+- loss rate
+- risk/reward
+- average trade
+- best symbols
+- worst symbols
+- Sharpe ratio
+- Sortino ratio
+- execution latency
+- trading frequency
+- trading calendar
+- provider performance
+- risk behavior
+
+Allow:
+
+- date filters
+- account filters
+- symbol filters
+- provider filters
+
+Reports can be exported.
+
+============================================================
+25. PROVIDER MARKETPLACE
+============================================================
+
+Provider marketplace.
+
+Pages:
+
+Browse Providers
+Search Providers
+Provider Categories
+Provider Profile
+Provider Performance
+Provider Signals
+Provider Reviews
+Provider Risk Analysis
+Provider Subscribers
+Provider Subscription Plans
+Subscribe to Provider
+My Providers
+Provider Comparison
+Provider Consensus
+
+Providers can publish signal services.
+
+Provider profiles should show verified/certified status.
+
+============================================================
+26. TRADER MARKETPLACE
+============================================================
+
+Pages:
+
+Browse Traders
+Trader Categories
+Trader Profile
+Trader Performance
+Trader Risk
+Trader Behavior
+Trader Intelligence
+Trading Style
+Reviews
+Follow Trader
+Copy Trading Settings
+My Followed Traders
+
+============================================================
+27. TRADER INTELLIGENCE
+============================================================
+
+Analyze trading behavior.
+
+Metrics:
+
+- consistency
+- discipline
+- average RR
+- holding time
+- risk behavior
+- martingale detection
+- grid detection
+- news exposure
+- recovery trading
+- trading style
+- behavior timeline
+
+============================================================
+28. PROVIDER CERTIFICATION
+============================================================
+
+Providers can submit historical messages.
+
+Workflow:
+
+Import Historical Messages
+↓
+Training Dataset
+↓
+AI Parsing
+↓
+Parsing Accuracy
+↓
+Backtesting
+↓
+Expected Performance
+↓
+Risk Assessment
+↓
+Consistency Score
+↓
+Quality Score
+↓
+Certification Result
+
+Store certification history.
+
+============================================================
+29. REFERRAL SYSTEM
+============================================================
+
+Implement a complete referral system.
+
+Each user can receive:
+
+- unique referral code
+- referral link
+
+Referral pages:
+
+Referral Dashboard
+My Referral Link
+Invite Friends
+Referral Network
+Referred Users
+Referral Performance
+Referral Earnings
+Pending Rewards
+Available Rewards
+Referral Wallet
+Reward History
+Monthly Settlement
+Referral Leaderboard
+Referral Terms
+
+IMPORTANT BUSINESS RULE:
+
+Referral rewards are NOT deducted from the referred user's trading profits.
+
+The reward is funded from SignalForge's platform revenue.
+
+The reward calculation is based on the referred user's monthly platform/trading earnings metric as configured by the business.
+
+Example configurable rule:
+
+If referred user's eligible monthly earnings = $3,000
+
+Referral reward rate = 0.1%
+
+Referral reward:
+
+$3,000 × 0.1% = $3
+
+The platform funds this reward from its own revenue allocation.
+
+DO NOT take money from the referred user's trading account to pay the referrer.
+
+Create configurable:
+
+reward percentage
+monthly cap
+minimum payout
+settlement date
+eligibility requirements
+maximum referral depth
+fraud prevention rules
+
+Create monthly settlement records.
+
+============================================================
+30. SUBSCRIPTIONS
+============================================================
+
+Subscription system.
+
+Pages:
+
+Pricing Plans
+Subscribe
+My Subscription
+Upgrade
+Downgrade
+Billing History
+Invoices
+Payment Methods
+Subscription Usage
+Cancel Subscription
+
+Plans should be database-driven.
+
+Do not hardcode pricing into components.
+
+Subscription states:
+
+TRIAL
+ACTIVE
+PAST_DUE
+CANCELLED
+EXPIRED
+SUSPENDED
+
+============================================================
+31. WALLET
+============================================================
+
+Wallet pages:
+
+Wallet Overview
+Available Balance
+Pending Balance
+Transaction History
+Withdrawal Request
+Withdrawal Status
+Withdrawal History
+Payment Accounts
+
+Create a proper ledger.
+
+Never simply modify wallet balance without a corresponding transaction.
+
+Use immutable transaction records.
+
+============================================================
+32. AFFILIATE & IB
+============================================================
+
+Affiliate dashboard:
+
+Affiliate Links
+Referrals
+Commissions
+Commission History
+
+IB dashboard:
+
+Broker Referral Links
+IB Referrals
+IB Revenue
+Commission History
+
+Separate affiliate commissions from normal user referrals.
+
+============================================================
+33. WHITE LABEL PLATFORM
+============================================================
+
+White-label architecture.
+
+Features:
+
+White Label Dashboard
+Brand Configuration
+Logo
+Brand Colors
+Domain Configuration
+Theme Configuration
+Custom Pricing
+Analytics
+Users
+Revenue
+Settings
+
+Use tenant-aware architecture.
+
+Every tenant's data must be isolated.
+
+============================================================
+34. NOTIFICATIONS
+============================================================
+
+Notification center.
+
+Notification types:
+
+Trade
+Signal
+KYC
+Referral
+Payment
+Security
+System
+
+Implement:
+
+- notification database
+- unread count
+- read/unread
+- notification preferences
+- email notification architecture
+- push notification architecture
+- in-app notifications
+
+============================================================
+35. USER SETTINGS
+============================================================
+
+Pages:
+
+Profile
+Account Settings
+Security
+2FA
+Connected Devices
+Connected Accounts
+Broker Settings
+Signal Source Settings
+Trading Preferences
+Risk Preferences
+Notification Settings
+Privacy
+API Keys
+Data & Privacy
+Delete Account
+
+============================================================
+36. ADMIN DASHBOARD
+============================================================
+
+Admin pages:
+
+Admin Overview
+User Management
+User Restrictions
+KYC Management
+Provider Management
+Trader Management
+Signal Source Management
+Broker Management
+Live Trade Monitor
+Live Signal Monitor
+AI Monitoring
+Provider DNA Monitoring
+Risk Monitoring
+Referral Management
+Subscription Management
+Payment Management
+Withdrawal Management
+Affiliate Management
+Marketplace Moderation
+Reports
+System Analytics
+Audit Logs
+Security Center
+System Settings
+
+Admin must have powerful filtering/searching.
+
+Do not allow admin actions without authorization.
+
+Sensitive actions should create audit logs.
+
+============================================================
+37. COMPLIANCE ADMIN
+============================================================
+
+Pages:
+
+Compliance Dashboard
+KYC Queue
+Pending
+Under Review
+Verified
+Rejected
+Suspended
+Document Types
+Verification Providers
+Risk Flags
+Compliance Reports
+KYC Audit Trail
+
+============================================================
+38. EXECUTIVE BUSINESS INTELLIGENCE
+============================================================
+
+Executive dashboard.
+
+Metrics:
+
+Subscription Revenue
+Marketplace Revenue
+Provider Revenue
+Affiliate Revenue
+IB Revenue
+Referral Cost
+Net Platform Revenue
+User Growth
+Provider Growth
+Trader Growth
+Trading Volume
+Platform Performance
+Retention
+Conversion
+Financial Reports
+
+Charts should use real database aggregations.
+
+Do not fabricate numbers.
+
+When database is empty, show empty-state analytics.
+
+============================================================
+39. SUPPORT
+============================================================
+
+Create:
+
+Help Center
+Support Dashboard
+Create Ticket
+View Tickets
+Knowledge Base
+Trading FAQ
+KYC FAQ
+Billing FAQ
+Technical Support
+
+Ticket states:
+
+OPEN
+IN_PROGRESS
+WAITING_FOR_USER
+RESOLVED
+CLOSED
+
+============================================================
+40. REPLAY & DEBUGGING
+============================================================
+
+This is an important institutional feature.
+
+Create Replay Center.
+
+Support:
+
+Trade Replay
+Signal Replay
+AI Processing Replay
+Risk Decision Replay
+Execution Replay
+Provider Message Replay
+System Event Timeline
+
+Every important processing step should have an event.
+
+Example:
+
+MESSAGE_RECEIVED
+SIGNAL_PARSED
+SIGNAL_NORMALIZED
+DUPLICATE_CHECKED
+CONSENSUS_CALCULATED
+RISK_CHECKED
+EXECUTION_APPROVED
+EXECUTION_SENT
+EXECUTION_RESULT
+TRADE_UPDATED
+
+This enables debugging of why a trade was or was not executed.
+
+============================================================
+41. DATABASE REQUIREMENTS
+============================================================
+
+Design a normalized PostgreSQL database.
+
+Core entities should include at minimum:
+
+users
+roles
+permissions
+user_roles
+sessions
+devices
+two_factor_methods
+
+kyc_profiles
+kyc_documents
+kyc_verifications
+kyc_reviews
+kyc_risk_flags
+
+subscriptions
+subscription_plans
+subscription_events
+invoices
+payments
+payment_methods
+
+wallets
+wallet_transactions
+withdrawal_requests
+payment_accounts
+
+referrals
+referral_relationships
+referral_rewards
+referral_settlements
+
+brokers
+broker_accounts
+broker_connections
+broker_sync_logs
+
+signal_sources
+signal_source_channels
+source_messages
+source_processing_logs
+
+signals
+signal_versions
+signal_duplicates
+signal_consensus
+signal_rejections
+
+providers
+provider_profiles
+provider_signals
+provider_reviews
+provider_subscriptions
+provider_dna
+provider_dna_versions
+provider_training_messages
+provider_certifications
+
+traders
+trader_profiles
+trader_reviews
+trader_followers
+copy_trading_settings
+
+trades
+trade_orders
+trade_positions
+trade_events
+trade_execution_logs
+
+risk_profiles
+risk_rules
+automation_rules
+risk_events
+
+analytics_snapshots
+performance_reports
+
+notifications
+notification_preferences
+
+affiliate_accounts
+affiliate_links
+affiliate_referrals
+affiliate_commissions
+
+ib_accounts
+ib_links
+ib_referrals
+ib_commissions
+
+white_label_tenants
+tenant_domains
+tenant_branding
+tenant_settings
+
+support_tickets
+support_messages
+knowledge_base_articles
+
+audit_logs
+security_events
+system_events
+
+ai_processing_logs
+ai_model_versions
+ai_model_performance
+
+replay_sessions
+replay_events
+
+============================================================
+42. DATABASE DESIGN PRINCIPLES
+============================================================
+
+Use:
+
+- UUID primary keys
+- created_at
+- updated_at
+- soft deletion where appropriate
+- foreign keys
+- indexes
+- unique constraints
+- enums where appropriate
+- transactions for financial operations
+
+Never store sensitive secrets in plaintext.
+
+Sensitive credentials should be encrypted.
+
+============================================================
+43. API ARCHITECTURE
+============================================================
+
+Create versioned API:
+
+/api/v1
+
+Groups:
+
+/auth
+/users
+/kyc
+/subscriptions
+/payments
+/wallet
+/referrals
+/brokers
+/signal-sources
+/signals
+/ai
+/providers
+/traders
+/trading
+/risk
+/analytics
+/notifications
+/affiliate
+/ib
+/white-label
+/support
+/admin
+/compliance
+/executive
+/replay
+
+Use:
+
+GET
+POST
+PUT/PATCH
+DELETE
+
+where appropriate.
+
+Validate request bodies with Zod.
+
+Return consistent API responses.
+
+Example:
+
+{
+  "success": true,
+  "data": {},
+  "message": "..."
+}
+
+Errors:
+
+{
+  "success": false,
+  "error": {
+    "code": "...",
+    "message": "...",
+    "details": {}
+  }
+}
+
+============================================================
+44. REAL-TIME ARCHITECTURE
+============================================================
+
+Use WebSockets for:
+
+- live signals
+- trade status
+- broker account status
+- notifications
+- processing status
+- admin monitoring
+
+Do not poll aggressively if WebSockets are appropriate.
+
+============================================================
+45. QUEUE ARCHITECTURE
+============================================================
+
+Signal processing can become high volume.
+
+Create a queue-ready architecture.
+
+Potential jobs:
+
+message ingestion
+AI parsing
+signal normalization
+duplicate detection
+consensus calculation
+risk processing
+trade execution
+trade monitoring
+analytics aggregation
+notifications
+monthly referral settlement
+
+The architecture should allow Redis/BullMQ or another queue system to be added.
+
+Do not put heavy processing directly into HTTP request handlers.
+
+============================================================
+46. SECURITY
+============================================================
+
+Implement:
+
+- authentication
+- authorization
+- RBAC
+- rate limiting
+- request validation
+- secure headers
+- CORS configuration
+- input sanitization
+- SQL injection prevention through ORM
+- password hashing
+- token/session security
+- encrypted secrets
+- audit logging
+- security event logging
+- account lockout/rate protection
+- device/session management
+
+Never expose:
+
+- database credentials
+- MetaApi token
+- Telegram session credentials
+- payment secret keys
+- KYC provider secrets
+- AI provider keys
+
+to frontend code.
+
+============================================================
+47. AUDIT LOGGING
+============================================================
+
+Create audit logs for important actions:
+
+- login
+- logout
+- password changes
+- 2FA changes
+- KYC actions
+- subscription actions
+- payment actions
+- withdrawal actions
+- broker connection
+- broker disconnection
+- signal source changes
+- automation changes
+- trade execution
+- risk changes
+- admin actions
+- user restrictions
+
+Store:
+
+actor
+action
+resource
+resource_id
+IP
+user_agent
+timestamp
+metadata
+
+============================================================
+48. ERROR HANDLING
+============================================================
+
+Implement global backend error handling.
+
+Frontend must have:
+
+- loading states
+- empty states
+- error states
+- retry actions
+- skeleton loaders
+- success feedback
+- confirmation dialogs
+
+Never leave users staring at blank screens.
+
+============================================================
+49. RESPONSIVE DESIGN
+============================================================
+
+Desktop first but fully responsive.
+
+Support:
+
+1920px
+1440px
+1280px
+1024px
+768px
+mobile
+
+Mobile navigation should use a bottom navigation or mobile drawer where appropriate.
+
+Tables should become responsive cards on small screens.
+
+Charts must resize correctly.
+
+============================================================
+50. PUBLIC WEBSITE
+============================================================
+
+Build all public pages:
+
+Home
+How SignalForge Works
+Features
+AI Signal Intelligence
+Automated Trading
+Risk Management
+Copy Trading
+Analytics
+Provider Marketplace
+Trader Marketplace
+Pricing
+Enterprise
+White Label
+API Platform
+Security
+About
+Contact
+FAQ
+
+Home page should communicate:
+
+"Connect your trading ecosystem."
+
+"Capture signals from your trusted sources."
+
+"Let AI understand and normalize them."
+
+"Apply your risk rules."
+
+"Execute through supported brokers."
+
+"Track everything."
+
+Use professional visual sections.
+
+============================================================
+51. AUTHENTICATION PAGES
+============================================================
+
+Create polished:
+
+Login
+Register
+Email Verification
+Phone Verification
+Forgot Password
+Reset Password
+2FA
+2FA Verification
+Account Recovery
+Session Verification
+
+============================================================
+52. USER DASHBOARD
+============================================================
+
+Dashboard should display:
+
+Account status
+KYC status
+Subscription status
+Broker connection
+Portfolio
+Live trading status
+Active signals
+Open trades
+Recent trades
+P&L
+Risk overview
+Account health
+Referral summary
+
+If KYC is incomplete:
+
+show prominent:
+
+ACCOUNT NOT VERIFIED
+
+and a CTA:
+
+Complete Verification
+
+============================================================
+53. EMPTY DATA EXPERIENCE
+============================================================
+
+Since there is NO seed data:
+
+Every page must gracefully handle empty data.
+
+Examples:
+
+No broker:
+
+"Connect your first trading account."
+
+No signal:
+
+"Your signal center is waiting for its first signal."
+
+No referrals:
+
+"Share your referral link to start building your network."
+
+No trades:
+
+"No trades have been executed yet."
+
+No providers:
+
+"No providers are currently available."
+
+No analytics:
+
+"Analytics will appear once trading activity is recorded."
+
+============================================================
+54. FRONTEND PAGE ARCHITECTURE
+============================================================
+
+Use route-level organization.
+
+Create separate layouts for:
+
+Public
+Authentication
+User
+Provider
+Admin
+Compliance
+Executive
+Support
+White Label
+
+Protect routes using authorization middleware.
+
+Example:
+
+/dashboard
+/signals
+/trading
+/brokers
+/analytics
+/referrals
+/subscription
+/wallet
+/settings
+
+/admin/*
+/compliance/*
+/executive/*
+/support/*
+/provider/*
+/affiliate/*
+/ib/*
+/white-label/*
+
+============================================================
+55. UI COMPONENT SYSTEM
+============================================================
+
+Build reusable components:
+
+Button
+Input
+Select
+Checkbox
+Radio
+Modal
+Drawer
+Dropdown
+Tooltip
+Badge
+Card
+Table
+DataTable
+Tabs
+Breadcrumb
+Pagination
+DatePicker
+Chart
+MetricCard
+StatCard
+StatusIndicator
+EmptyState
+ErrorState
+LoadingState
+Skeleton
+ConfirmationDialog
+Toast
+NotificationPanel
+Sidebar
+Topbar
+CommandPalette
+Search
+FilterPanel
+
+Do not duplicate UI components unnecessarily.
+
+============================================================
+56. DASHBOARD QUALITY
+============================================================
+
+The dashboard should feel like professional financial software.
+
+Use:
+
+- metric cards
+- clean charts
+- compact tables
+- status indicators
+- activity timelines
+- filtering
+- drill-down views
+- tooltips
+- contextual actions
+
+Do not overload the screen.
+
+Information hierarchy is very important.
+
+============================================================
+57. SEARCH
+============================================================
+
+Implement global search architecture.
+
+Search:
+
+- signals
+- trades
+- providers
+- traders
+- users where authorized
+- tickets
+- documentation
+
+============================================================
+58. FILTERING
+============================================================
+
+Build reusable filtering system.
+
+Filters:
+
+date
+status
+symbol
+provider
+source
+account
+risk
+confidence
+trade direction
+KYC status
+subscription
+payment status
+
+============================================================
+59. ENVIRONMENT CONFIGURATION
+============================================================
+
+Create .env.example.
+
+Variables should include placeholders for:
+
+DATABASE_URL
+JWT_SECRET
+SESSION_SECRET
+
+METAAPI_TOKEN
+METAAPI_REGION
+
+TELEGRAM_API_ID
+TELEGRAM_API_HASH
+TELEGRAM_SESSION_SECRET
+
+DISCORD_CLIENT_ID
+DISCORD_CLIENT_SECRET
+
+WHATSAPP credentials
+
+PAYSTACK_SECRET_KEY
+STRIPE_SECRET_KEY
+
+KYC provider credentials
+
+AI provider credentials
+
+SMTP credentials
+
+REDIS_URL
+
+Never commit actual secrets.
+
+============================================================
+60. INTEGRATION ARCHITECTURE
+============================================================
+
+Create separate service interfaces.
+
+Example:
+
+BrokerService
+SignalSourceService
+AIService
+PaymentService
+KYCService
+NotificationService
+ReferralService
+AnalyticsService
+
+Then create implementations:
+
+MetaApiBrokerService
+TelegramSignalSourceService
+DiscordSignalSourceService
+WhatsAppSignalSourceService
+TradingViewSignalSourceService
+EmailSignalSourceService
+PaystackPaymentService
+StripePaymentService
+
+This makes the system replaceable and scalable.
+
+============================================================
+61. LOGGING
+============================================================
+
+Implement structured logging.
+
+Log:
+
+- API requests
+- authentication events
+- integration events
+- signal processing
+- AI processing
+- risk decisions
+- execution
+- payment events
+- KYC events
+- system errors
+
+Never log secrets.
+
+Never log passwords.
+
+Never log raw sensitive KYC information.
+
+============================================================
+62. TESTING
+============================================================
+
+Create tests for:
+
+Authentication
+Authorization
+KYC
+Referral calculations
+Subscription logic
+Wallet ledger
+Signal parsing
+Duplicate detection
+Consensus
+Risk engine
+Automation rules
+Broker adapter
+Trade execution state machine
+
+Especially test financial calculations.
+
+Example:
+
+3000 × 0.001 = 3
+
+Do not use floating point arithmetic for monetary calculations where avoidable.
+
+Use decimal/numeric database types.
+
+============================================================
+63. ADMIN SAFETY
+============================================================
+
+Admin actions affecting:
+
+users
+money
+withdrawals
+KYC
+trades
+subscriptions
+
+must require appropriate permissions.
+
+Sensitive actions should require confirmation.
+
+High-risk actions should create audit events.
+
+============================================================
+64. DEVELOPMENT PHASES
+============================================================
+
+Do not attempt to blindly generate everything in one giant file.
+
+Build incrementally.
+
+PHASE 1:
+
+Project foundation
+React
+Express
+TypeScript
+PostgreSQL
+ORM
+environment configuration
+routing
+layouts
+component system
+
+PHASE 2:
+
+Authentication
+RBAC
+sessions
+2FA
+
+PHASE 3:
+
+KYC
+
+PHASE 4:
+
+User dashboard
+
+PHASE 5:
+
+Subscriptions
+Payments
+Wallet
+
+PHASE 6:
+
+Broker architecture
+MetaApi adapter
+
+PHASE 7:
+
+Signal sources
+
+PHASE 8:
+
+Signal ingestion pipeline
+
+PHASE 9:
+
+AI intelligence
+
+PHASE 10:
+
+Provider DNA
+
+PHASE 11:
+
+Risk engine
+
+PHASE 12:
+
+Trading execution
+
+PHASE 13:
+
+Analytics
+
+PHASE 14:
+
+Marketplaces
+
+PHASE 15:
+
+Referral
+Affiliate
+IB
+
+PHASE 16:
+
+Provider certification
+
+PHASE 17:
+
+White label
+
+PHASE 18:
+
+Notifications
+Support
+
+PHASE 19:
+
+Admin
+Compliance
+Executive
+
+PHASE 20:
+
+Replay/debugging
+
+PHASE 21:
+
+Security hardening
+
+PHASE 22:
+
+Testing
+
+PHASE 23:
+
+Production readiness
+
+============================================================
+65. IMPORTANT REPLIT AGENT BEHAVIOR
+============================================================
+
+Before implementing a feature:
+
+1. Understand its database requirements.
+2. Create/update schema.
+3. Create migration.
+4. Create backend service.
+5. Create API routes.
+6. Create validation.
+7. Create frontend API integration.
+8. Create frontend pages.
+9. Add loading/error/empty states.
+10. Add authorization.
+11. Add audit logging where appropriate.
+12. Test the feature.
+
+Do not build frontend-only fake functionality.
+
+Do not create huge monolithic files.
+
+Keep code modular.
+
+Use TypeScript strictly.
+
+Avoid "any" unless absolutely necessary.
+
+============================================================
+66. CODE QUALITY
+============================================================
+
+Use:
+
+- clean architecture
+- service layer
+- repository/data access layer where useful
+- DTOs
+- validation
+- typed API responses
+- reusable components
+- modular routes
+- centralized error handling
+- centralized configuration
+- dependency injection where useful
+
+Do not duplicate business logic between frontend and backend.
+
+Business-critical rules belong on the backend.
+
+============================================================
+67. FINANCIAL DATA
+============================================================
+
+All financial values must use appropriate decimal/numeric representations.
+
+Never rely on JavaScript floating point for money calculations.
+
+Transactions must be atomic.
+
+Wallet operations must use database transactions.
+
+Referral settlement must be idempotent.
+
+Payment webhooks must be verified.
+
+Never trust payment status from the frontend.
+
+============================================================
+68. WEBHOOK SECURITY
+============================================================
+
+For:
+
+Paystack
+Stripe
+TradingView
+other webhooks
+
+Implement:
+
+- signature verification
+- idempotency
+- replay protection
+- event logging
+- webhook processing status
+
+============================================================
+69. SIGNAL PROCESSING RELIABILITY
+============================================================
+
+A signal must NEVER automatically become a trade simply because an AI model extracted BUY/SELL.
+
+The system must verify:
+
+1. signal validity
+2. account availability
+3. user automation settings
+4. risk limits
+5. symbol availability
+6. market status
+7. duplicate status
+8. provider rules
+9. confidence threshold
+10. emergency stop
+11. execution permissions
+
+Then decide:
+
+APPROVE
+REJECT
+WAIT
+REVIEW
+
+Record the reason.
+
+============================================================
+70. USER CONTROL
+============================================================
+
+Users must control:
+
+- connected brokers
+- signal sources
+- providers
+- automation
+- risk settings
+- max trade risk
+- daily loss limit
+- allowed symbols
+- allowed sessions
+- live/demo mode
+- emergency stop
+
+Users should always understand why an action happened.
+
+============================================================
+71. EXPLAINABILITY
+============================================================
+
+For every processed signal provide a processing timeline.
+
+Example:
+
+10:02:01
+Message received
+
+10:02:02
+AI detected trading signal
+
+10:02:02
+Symbol normalized: EURUSD
+
+10:02:03
+Duplicate check passed
+
+10:02:03
+Provider DNA confidence: ...
+
+10:02:03
+Risk validation passed
+
+10:02:04
+Execution approved
+
+10:02:04
+Broker execution requested
+
+This should be visible in Signal Details and Replay.
+
+============================================================
+72. PROFESSIONAL UX
+============================================================
+
+Use:
+
+- confirmation dialogs
+- tooltips
+- inline explanations
+- clear error messages
+- success messages
+- progress indicators
+- skeleton loaders
+- breadcrumbs
+- consistent spacing
+
+Avoid:
+
+- giant text everywhere
+- excessive gradients
+- excessive animations
+- unnecessary popups
+- fake statistics
+- fake testimonials
+- fake reviews
+- fake trades
+
+============================================================
+73. SEO
+============================================================
+
+Public pages should include:
+
+- page titles
+- meta descriptions
+- semantic HTML
+- Open Graph metadata
+- accessible navigation
+
+============================================================
+74. ACCESSIBILITY
+============================================================
+
+Follow WCAG principles.
+
+Support:
+
+keyboard navigation
+focus states
+ARIA labels
+screen readers
+sufficient contrast
+
+============================================================
+75. FINAL ACCEPTANCE CRITERIA
+============================================================
+
+The system is NOT considered complete if it only contains UI pages.
+
+It must contain:
+
+✓ React frontend
+✓ TypeScript
+✓ Express backend
+✓ PostgreSQL
+✓ ORM
+✓ migrations
+✓ authentication
+✓ RBAC
+✓ KYC
+✓ subscriptions
+✓ payments architecture
+✓ wallet ledger
+✓ referral engine
+✓ broker architecture
+✓ MetaApi adapter
+✓ signal-source architecture
+✓ Telegram architecture
+✓ Discord architecture
+✓ WhatsApp architecture
+✓ TradingView webhooks
+✓ REST signal ingestion
+✓ Email signal ingestion
+✓ AI signal parser architecture
+✓ Provider DNA
+✓ duplicate detection
+✓ consensus engine
+✓ risk engine
+✓ automation engine
+✓ trading execution architecture
+✓ analytics
+✓ provider marketplace
+✓ trader marketplace
+✓ provider certification
+✓ affiliate system
+✓ IB system
+✓ white-label architecture
+✓ notifications
+✓ settings
+✓ admin
+✓ compliance
+✓ executive BI
+✓ support
+✓ replay/debugging
+✓ audit logging
+✓ security architecture
+✓ empty-state handling
+✓ responsive UI
+✓ tests
+✓ documentation
+
+============================================================
+76. VERY IMPORTANT — NO SEED DATA
+============================================================
+
+Do NOT insert sample users, trades, providers, signals, payments, referrals, or analytics.
+
+The database must remain empty after migrations.
+
+Create migrations only.
+
+Create an optional development script ONLY if explicitly requested later.
+
+============================================================
+77. START NOW
+============================================================
+
+First inspect the current Replit project.
+
+If the project is empty:
+
+Initialize the complete project.
+
+If files already exist:
+
+Do not destroy working code unnecessarily.
+
+Create a clean architecture.
+
+Before implementing all modules, establish:
+
+1. project configuration
+2. database connection
+3. Prisma/Drizzle schema
+4. migrations
+5. authentication
+6. global UI system
+7. routing
+8. layouts
+9. API architecture
+10. error handling
+11. environment configuration
+
+Then proceed through the development phases.
+
+After every major phase:
+
+- verify TypeScript compilation
+- verify database schema
+- verify API routes
+- verify frontend routes
+- verify authentication/authorization
+- fix errors
+- continue
+
+Do not stop after creating the landing page.
+
+Do not stop after creating the dashboard.
+
+Do not replace backend functionality with mock JSON.
+
+Do not use fake APIs.
+
+Do not use hardcoded production secrets.
+
+Build SignalForge as a scalable, maintainable, professional SaaS platform.
+
+============================================================
+END OF MASTER SPECIFICATION
+============================================================

@@ -3,13 +3,27 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SignalForge trading intelligence platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Authenticated workspace summaries
+  - name: signals
+    description: Signal intelligence and normalized signal records
+  - name: sources
+    description: Connected signal sources
+  - name: brokers
+    description: Broker account connections
+  - name: risk
+    description: Risk and automation settings
+  - name: analytics
+    description: Trading performance analytics
+  - name: marketplace
+    description: Signal provider discovery
 paths:
   /healthz:
     get:
@@ -24,7 +38,192 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get the current workspace summary
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /activity:
+    get:
+      operationId: listActivity
+      tags: [dashboard]
+      summary: List recent workspace activity
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+  /signals:
+    get:
+      operationId: listSignals
+      tags: [signals]
+      summary: List normalized signals
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [all, live, validated, rejected, archived]
+            default: all
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: Signal list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Signal"
+  /signal-sources:
+    get:
+      operationId: listSignalSources
+      tags: [sources]
+      summary: List connected signal sources
+      responses:
+        "200":
+          description: Signal sources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SignalSource"
+    post:
+      operationId: createSignalSource
+      tags: [sources]
+      summary: Create a signal source configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignalSourceInput"
+      responses:
+        "201":
+          description: Created signal source
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignalSource"
+        "400":
+          description: Invalid source configuration
+  /signal-sources/{id}:
+    patch:
+      operationId: updateSignalSource
+      tags: [sources]
+      summary: Update a signal source
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignalSourceUpdate"
+      responses:
+        "200":
+          description: Updated signal source
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignalSource"
+        "404":
+          description: Source not found
+  /broker-accounts:
+    get:
+      operationId: listBrokerAccounts
+      tags: [brokers]
+      summary: List connected broker accounts
+      responses:
+        "200":
+          description: Broker accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BrokerAccount"
+  /risk/profile:
+    get:
+      operationId: getRiskProfile
+      tags: [risk]
+      summary: Get the active risk profile
+      responses:
+        "200":
+          description: Risk profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskProfile"
+    patch:
+      operationId: updateRiskProfile
+      tags: [risk]
+      summary: Update risk profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiskProfileUpdate"
+      responses:
+        "200":
+          description: Updated risk profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskProfile"
+  /analytics/overview:
+    get:
+      operationId: getAnalyticsOverview
+      tags: [analytics]
+      summary: Get analytics overview
+      responses:
+        "200":
+          description: Analytics overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsOverview"
+  /providers:
+    get:
+      operationId: listProviders
+      tags: [marketplace]
+      summary: List available signal providers
+      responses:
+        "200":
+          description: Signal providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Provider"
 components:
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +232,174 @@ components:
           type: string
       required:
         - status
+    DashboardSummary:
+      type: object
+      required: [account, kyc, subscription, trading, metrics]
+      properties:
+        account:
+          $ref: "#/components/schemas/AccountStatus"
+        kyc:
+          $ref: "#/components/schemas/KycStatus"
+        subscription:
+          $ref: "#/components/schemas/SubscriptionStatus"
+        trading:
+          $ref: "#/components/schemas/TradingStatus"
+        metrics:
+          $ref: "#/components/schemas/DashboardMetrics"
+    AccountStatus:
+      type: object
+      required: [name, initials, role]
+      properties:
+        name: { type: string }
+        initials: { type: string }
+        role: { type: string }
+    KycStatus:
+      type: object
+      required: [status, label]
+      properties:
+        status:
+          type: string
+          enum: [NOT_STARTED, PENDING, UNDER_REVIEW, VERIFIED, REJECTED, SUSPENDED]
+        label: { type: string }
+    SubscriptionStatus:
+      type: object
+      required: [status, plan]
+      properties:
+        status:
+          type: string
+          enum: [TRIAL, ACTIVE, PAST_DUE, CANCELLED, EXPIRED, SUSPENDED]
+        plan: { type: string }
+        renewsAt: { type: ["string", "null"], format: date-time }
+    TradingStatus:
+      type: object
+      required: [environment, brokerStatus, automation]
+      properties:
+        environment:
+          type: string
+          enum: [DEMO, LIVE]
+        brokerStatus:
+          type: string
+          enum: [NOT_CONNECTED, CONNECTED, SYNCING, DISCONNECTED, ERROR]
+        automation:
+          type: string
+          enum: [OFF, MANUAL, AUTOMATED]
+    DashboardMetrics:
+      type: object
+      required: [balance, equity, openPositions, todayPnl]
+      properties:
+        balance: { type: ["number", "null"] }
+        equity: { type: ["number", "null"] }
+        openPositions: { type: integer }
+        todayPnl: { type: ["number", "null"] }
+    ActivityItem:
+      type: object
+      required: [id, title, description, category, createdAt]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        category:
+          type: string
+          enum: [SIGNAL, RISK, BROKER, SYSTEM, KYC, BILLING]
+        createdAt: { type: string, format: date-time }
+    Signal:
+      type: object
+      required: [id, symbol, direction, status, source, confidence, receivedAt]
+      properties:
+        id: { type: string }
+        symbol: { type: string }
+        direction:
+          type: string
+          enum: [BUY, SELL]
+        entry: { type: ["number", "null"] }
+        stopLoss: { type: ["number", "null"] }
+        takeProfit: { type: ["number", "null"] }
+        status:
+          type: string
+          enum: [LIVE, VALIDATED, REJECTED, ARCHIVED]
+        source: { type: string }
+        confidence: { type: ["number", "null"] }
+        receivedAt: { type: string, format: date-time }
+    SignalSource:
+      type: object
+      required: [id, name, type, status, channelCount]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type:
+          type: string
+          enum: [TELEGRAM, DISCORD, WHATSAPP, TRADINGVIEW, REST, EMAIL]
+        status:
+          type: string
+          enum: [NOT_CONNECTED, CONNECTED, PAUSED, ERROR]
+        channelCount: { type: integer }
+        lastMessageAt: { type: ["string", "null"], format: date-time }
+    SignalSourceInput:
+      type: object
+      required: [name, type]
+      properties:
+        name: { type: string, minLength: 1 }
+        type:
+          type: string
+          enum: [TELEGRAM, DISCORD, WHATSAPP, TRADINGVIEW, REST, EMAIL]
+    SignalSourceUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        status:
+          type: string
+          enum: [NOT_CONNECTED, CONNECTED, PAUSED, ERROR]
+    BrokerAccount:
+      type: object
+      required: [id, name, platform, mode, status]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        platform:
+          type: string
+          enum: [MT4, MT5]
+        mode:
+          type: string
+          enum: [DEMO, LIVE]
+        status:
+          type: string
+          enum: [NOT_CONNECTED, CONNECTED, SYNCING, DISCONNECTED, ERROR]
+    RiskProfile:
+      type: object
+      required: [riskPerTrade, maxDailyLoss, maxOpenTrades, minimumConfidence, emergencyStop]
+      properties:
+        riskPerTrade: { type: number, minimum: 0, maximum: 100 }
+        maxDailyLoss: { type: number, minimum: 0 }
+        maxOpenTrades: { type: integer, minimum: 0 }
+        minimumConfidence: { type: number, minimum: 0, maximum: 100 }
+        emergencyStop: { type: boolean }
+    RiskProfileUpdate:
+      type: object
+      properties:
+        riskPerTrade: { type: number, minimum: 0, maximum: 100 }
+        maxDailyLoss: { type: number, minimum: 0 }
+        maxOpenTrades: { type: integer, minimum: 0 }
+        minimumConfidence: { type: number, minimum: 0, maximum: 100 }
+        emergencyStop: { type: boolean }
+    AnalyticsOverview:
+      type: object
+      required: [totalTrades, winRate, profitFactor, netPnl, maxDrawdown]
+      properties:
+        totalTrades: { type: integer }
+        winRate: { type: ["number", "null"] }
+        profitFactor: { type: ["number", "null"] }
+        netPnl: { type: ["number", "null"] }
+        maxDrawdown: { type: ["number", "null"] }
+    Provider:
+      type: object
+      required: [id, name, description, status, followers]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        status:
+          type: string
+          enum: [PENDING, ACTIVE, SUSPENDED]
+        followers: { type: integer }
+        winRate: { type: ["number", "null"] }
 
