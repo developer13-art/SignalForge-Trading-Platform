@@ -1,0 +1,1887 @@
+SIGNALFORGE — COMPLETE PRODUCT DEFINITION
+1. What exactly are we building?
+
+SignalForge is a multi-user SaaS platform for traders that transforms trading signals from external sources into a controlled, intelligent trading workflow.
+
+The platform allows a user to:
+
+Connect signal sources
+        ↓
+Receive messages
+        ↓
+Detect potential trading signals
+        ↓
+Extract structured trade information
+        ↓
+Analyze the signal with AI
+        ↓
+Evaluate provider/source reliability
+        ↓
+Validate the signal
+        ↓
+Detect duplicates/conflicts
+        ↓
+Apply user's trading rules
+        ↓
+Apply risk controls
+        ↓
+Choose Demo or Live account
+        ↓
+Execute through MetaApi
+        ↓
+Monitor the trade
+        ↓
+Record everything
+        ↓
+Analyze performance
+
+The platform should support both:
+
+Manual mode
+
+The system analyzes the signal and presents it to the user.
+
+Signal detected
+      ↓
+AI analysis
+      ↓
+Validation
+      ↓
+User sees:
+BUY EURUSD
+Entry: ...
+SL: ...
+TP: ...
+Confidence: ...
+      ↓
+User decides
+Automated mode
+
+The system can execute an approved signal according to the user's configured rules.
+
+Signal
+ ↓
+AI
+ ↓
+Validation
+ ↓
+Risk Engine
+ ↓
+Automation Rules
+ ↓
+Execution Engine
+ ↓
+MetaApi
+ ↓
+MT4 / MT5
+
+Automation must never bypass the validation and risk layers.
+
+2. The core idea
+
+The easiest way for an AI coding agent to understand SignalForge is:
+
+SignalForge sits between trading-signal providers and traders' broker accounts.
+
+It is the intelligence and control layer.
+
+SIGNAL SOURCES
+     │
+     ▼
+SIGNALFORGE
+     │
+ ┌───┴──────────────────────┐
+ │                          │
+ AI + VALIDATION          USER RULES
+ │                          │
+ └───────────┬──────────────┘
+             │
+        RISK ENGINE
+             │
+      EXECUTION ENGINE
+             │
+          METAAPI
+             │
+        MT4 / MT5
+3. Signal sources
+
+The platform is designed to support multiple sources.
+
+Primary source
+
+Telegram User Session
+
+This is the method we selected for Telegram.
+
+A user connects their Telegram account/session to SignalForge and selects the channels/groups they want SignalForge to monitor.
+
+User Telegram Session
+        ↓
+Selected Telegram Channels
+        ↓
+Message Listener
+        ↓
+SignalForge
+
+The system should not simply treat every message as a trade.
+
+For example:
+
+"Good morning everyone"
+
+is not a signal.
+
+But:
+
+EURUSD BUY
+Entry 1.1050
+SL 1.1020
+TP 1.1110
+
+is a potential signal.
+
+Other source adapters
+
+The architecture should support:
+
+Telegram
+Discord
+WhatsApp where technically/legally supported
+Email
+TradingView
+REST/API sources
+Future custom providers
+
+The important architectural principle is:
+
+Telegram Adapter ──┐
+Discord Adapter ───┤
+Email Adapter ─────┤
+TradingView ───────┤
+REST API ──────────┤
+                   ▼
+            Unified Message
+                   ▼
+            Signal Pipeline
+
+So the AI agent should not build the entire system specifically around Telegram.
+
+Telegram is the first source adapter.
+
+4. Provider concept
+
+SignalForge needs a Provider concept.
+
+A provider is the source/person/channel that generates signals.
+
+For example:
+
+Provider
+   │
+   ├── Name
+   ├── Description
+   ├── Source
+   ├── Channels
+   ├── Signal history
+   ├── Accuracy statistics
+   ├── Performance
+   ├── Reputation
+   ├── Number of subscribers
+   └── Status
+
+This creates the foundation for a future signal-provider marketplace.
+
+Users can discover providers and decide which sources to connect/follow.
+
+5. Provider DNA
+
+One of the important AI components is Provider DNA.
+
+SignalForge should learn the structure and behavior of each provider.
+
+For example, one provider may normally send:
+
+BUY EURUSD
+ENTRY 1.1000
+SL 1.0970
+TP1 1.1030
+TP2 1.1060
+
+Another may write:
+
+EUR/USD LONG @ 1.1000
+Stop: 1.0970
+Targets: 1.1030 / 1.1060
+
+The Provider DNA layer learns:
+
+terminology
+formatting
+symbols
+entry conventions
+stop-loss conventions
+take-profit conventions
+signal timing
+historical behavior
+provider reliability
+typical signal quality
+
+This makes signal extraction much more reliable.
+
+6. AI signal engine
+
+The AI engine is not simply:
+
+"ChatGPT, should I buy?"
+
+Instead it should be a structured processing pipeline.
+
+Raw Message
+     ↓
+Message Classification
+     ↓
+Signal Extraction
+     ↓
+Normalization
+     ↓
+Provider DNA
+     ↓
+Context Analysis
+     ↓
+Validation
+     ↓
+Confidence Score
+     ↓
+Signal Decision
+
+The AI should extract structured information such as:
+
+symbol
+direction
+entry
+entry_type
+stop_loss
+take_profit_1
+take_profit_2
+take_profit_3
+timeframe
+signal_type
+confidence
+source
+timestamp
+7. Signal normalization
+
+Different providers may express the same thing differently.
+
+The system converts everything into one internal format.
+
+For example:
+
+BUY EURUSD NOW
+
+becomes:
+
+{
+  "symbol": "EURUSD",
+  "direction": "BUY",
+  "entry_type": "MARKET"
+}
+
+Another:
+
+EURUSD LONG @ 1.1050
+SL 1.1020
+TP 1.1100
+
+becomes:
+
+{
+  "symbol": "EURUSD",
+  "direction": "BUY",
+  "entry": 1.1050,
+  "stopLoss": 1.1020,
+  "takeProfit": 1.1100
+}
+
+The entire platform works with the normalized representation.
+
+8. Signal validation
+
+Before a signal becomes executable, it goes through validation.
+
+Validation can check:
+
+Is the symbol valid?
+Is the direction valid?
+Is entry available?
+Is SL available when required?
+Is TP available when required?
+Is the message actually a signal?
+Is the signal expired?
+Is the source trusted?
+Is this a duplicate?
+Does it conflict with another signal?
+Is the market currently tradable?
+Does it violate the user's rules?
+Does the account permit the trade?
+Does the risk calculation pass?
+
+Only after validation can the signal continue.
+
+9. Multiple messages and duplicate signals
+
+This is one of the problems you identified earlier.
+
+Suppose 500 users subscribe to the same Telegram channel.
+
+The channel sends:
+
+EURUSD BUY @ 1.1050
+
+SignalForge should not process the message 500 times.
+
+Instead:
+
+Telegram
+   ↓
+ONE incoming message
+   ↓
+ONE normalized signal
+   ↓
+ONE AI analysis
+   ↓
+ONE validated signal
+   ↓
+Fan-out
+   ├── User A rules
+   ├── User B rules
+   ├── User C rules
+   └── User D rules
+
+This is a critical architectural requirement.
+
+The system needs:
+
+Message ID
+
+Identify the original message.
+
+Signal fingerprint
+
+Identify equivalent signals.
+
+Idempotency
+
+Prevent duplicate processing.
+
+Fan-out
+
+Deliver one validated signal to many subscribers.
+
+10. Conflicting signals
+
+Suppose:
+
+Provider A:
+EURUSD BUY
+
+and shortly afterward:
+
+Provider B:
+EURUSD SELL
+
+SignalForge shouldn't blindly execute both.
+
+The system should detect the conflict and process it according to the configured consensus/decision rules.
+
+Possible internal result:
+
+EURUSD
+────────────────
+BUY providers: 4
+SELL providers: 1
+
+Consensus: BUY
+Confidence: High
+
+But the actual decision must still respect the user's rules and risk configuration.
+
+11. User-specific signal processing
+
+This is another major concept.
+
+There is one signal, but potentially hundreds of different user configurations.
+
+Example:
+
+MASTER SIGNAL
+
+EURUSD BUY
+Entry 1.1050
+SL 1.1020
+TP 1.1110
+User A
+Demo
+Risk: 1%
+Auto: ON
+User B
+Live
+Risk: 0.5%
+Auto: OFF
+User C
+Live
+Provider allowed: NO
+Auto: OFF
+
+So the system must personalize the signal after the common signal analysis.
+
+12. User trading rules
+
+Every user should have configurable rules.
+
+Examples:
+
+Allowed symbols
+Allowed providers
+Allowed trading sessions
+Maximum open trades
+Maximum daily trades
+Risk percentage
+Minimum confidence
+Auto-execution
+Demo/live preference
+Maximum spread
+Maximum lot size
+Stop-loss required
+Take-profit required
+
+These rules become the user's automation profile.
+
+13. Risk engine
+
+The risk engine is one of the most important parts of SignalForge.
+
+It determines whether an otherwise valid signal is allowed to reach execution.
+
+Conceptually:
+
+Signal
+   ↓
+User Account
+   ↓
+Risk Configuration
+   ↓
+Risk Calculation
+   ↓
+PASS / BLOCK
+
+The engine should consider things such as:
+
+account balance/equity
+configured risk
+stop-loss distance
+symbol specifications
+position size
+existing exposure
+open trades
+daily limits
+user-defined restrictions
+
+The platform should fail closed: if a critical risk check cannot be completed reliably, the trade should not automatically execute.
+
+14. Demo vs Live
+
+We specifically discussed allowing the user to choose the account type.
+
+The system should support:
+
+DEMO
+
+and
+
+LIVE
+
+A user should clearly see:
+
+Current Trading Environment
+
+● DEMO
+○ LIVE
+
+Live trading should require stronger confirmation and configuration than demo operation.
+
+The UI must make the environment extremely obvious so a user doesn't mistake a demo connection for a live account.
+
+15. MetaApi integration
+
+MetaApi is the broker connectivity layer.
+
+SignalForge doesn't directly communicate with MT4/MT5 terminals.
+
+Instead:
+
+SignalForge
+     ↓
+MetaApi
+     ↓
+MT4 / MT5
+     ↓
+Broker
+
+The backend stores each connected account's MetaApi account ID.
+
+Example:
+
+User
+ ↓
+broker_account
+ ↓
+metaapi_account_id
+ ↓
+MetaApi
+ ↓
+MT5
+
+The MetaApi token stays server-side only.
+
+16. Broker account lifecycle
+
+A user goes through:
+
+Add Broker Account
+       ↓
+Select MT4 / MT5
+       ↓
+Connect account
+       ↓
+MetaApi registration
+       ↓
+Deployment
+       ↓
+Connection test
+       ↓
+Synchronization
+       ↓
+Account ready
+
+The dashboard should show:
+
+● Connected
+● Synchronizing
+● Disconnected
+● Deployment pending
+● Error
+17. Trade execution engine
+
+The execution engine receives an approved signal.
+
+It should perform final checks before sending the trade.
+
+Validated Signal
+       ↓
+Execution Request
+       ↓
+User Authorization
+       ↓
+Risk Check
+       ↓
+Account Check
+       ↓
+Market Check
+       ↓
+Duplicate Trade Check
+       ↓
+MetaApi
+       ↓
+Broker
+
+The execution engine should record:
+
+signal_id
+user_id
+broker_account_id
+execution_request_id
+MetaApi request/order ID
+execution status
+requested price
+executed price
+volume
+SL
+TP
+timestamps
+error
+18. Trade state management
+
+Execution isn't the end.
+
+SignalForge needs to track:
+
+Signal
+ ↓
+Execution requested
+ ↓
+Order placed
+ ↓
+Order accepted
+ ↓
+Position opened
+ ↓
+Position modified
+ ↓
+TP/SL
+ ↓
+Position closed
+
+If MetaApi reports a change, SignalForge updates its internal state.
+
+19. Real-time system
+
+This is why we need the WebSocket capabilities.
+
+The system should receive real-time events for things such as:
+
+account changes
+position changes
+order events
+trade events
+market information where applicable
+
+Then:
+
+MetaApi
+   ↓
+WebSocket
+   ↓
+SignalForge Event Processor
+   ↓
+Redis/Event Bus
+   ↓
+Database
+   ↓
+WebSocket
+   ↓
+React
+
+The user's dashboard can therefore update live.
+
+20. KYC system
+
+KYC is a mandatory platform gate.
+
+Before a user can access protected functionality:
+
+User
+ ↓
+KYC Status?
+
+If not verified:
+
+ACCOUNT NOT VERIFIED
+
+Complete KYC verification to continue.
+[Verify Account]
+
+Supported documents should include the agreed options such as:
+
+national identity/plastic ID card
+voter's card
+driver's license
+other supported identity documents
+
+The KYC workflow:
+
+Upload document
+       ↓
+Document validation
+       ↓
+Identity verification
+       ↓
+Admin/reviewer decision where required
+       ↓
+KYC APPROVED
+
+Statuses:
+
+Not Started
+Pending
+Under Review
+Approved
+Rejected
+Requires Resubmission
+21. KYC must gate important actions
+
+The requirement we established is:
+
+Subscription
+Try to subscribe
+      ↓
+KYC?
+      ↓
+NO
+      ↓
+KYC prompt
+Referral
+Try to access referral functionality
+      ↓
+KYC?
+      ↓
+NO
+      ↓
+Complete KYC
+Trading
+Connect/enable trading
+      ↓
+KYC?
+      ↓
+NO
+      ↓
+Blocked
+
+The dashboard should always visibly show:
+
+⚠ Account Not Verified
+Complete KYC to unlock all features.
+22. Subscription system
+
+SignalForge is a subscription SaaS.
+
+The subscription system controls access to platform capabilities.
+
+Conceptually:
+
+User
+ ↓
+KYC
+ ↓
+Subscription
+ ↓
+Plan
+ ↓
+Features
+
+Plans can be configured by administrators.
+
+Each plan can define:
+
+price
+billing period
+signal sources
+number of sources
+number of broker accounts
+automation availability
+AI limits
+analytics
+marketplace access
+other feature limits
+23. Payment system
+
+The platform should integrate with the selected payment provider, including the Paystack flow we previously discussed.
+
+The important architecture is:
+
+User
+ ↓
+Checkout
+ ↓
+Payment Provider
+ ↓
+Webhook
+ ↓
+SignalForge Payment Service
+ ↓
+Verify transaction
+ ↓
+Activate subscription
+
+Never activate a subscription based solely on the frontend redirect.
+
+The backend webhook/verification process is the source of truth.
+
+24. Referral system
+
+We added this feature specifically.
+
+Every user can have a referral code/link.
+
+Example:
+
+signalforge.com/register?ref=SF123456
+
+The system records:
+
+Referrer
+     ↓
+Referral
+     ↓
+Referred User
+Your agreed reward model
+
+The reward is not deducted from the referred user's trading earnings.
+
+Instead:
+
+The referral reward is paid from SignalForge's own platform income.
+
+The reward is calculated based on the referred user's qualifying monthly earnings.
+
+For example:
+
+Referred user's qualifying monthly earnings:
+$3,000
+
+Referral percentage:
+0.1%
+
+Referral reward:
+$3.00
+
+So:
+
+Referred user
+     │
+     └── continues trading normally
+
+SignalForge platform revenue
+     │
+     ├── operating/platform income
+     │
+     └── referral reward allocation
+                  ↓
+              Referrer
+
+The referred trader's account balance should not be reduced by the referral reward.
+
+The system needs:
+
+referral_code
+referrer_id
+referred_user_id
+qualified_period
+qualifying_earnings
+reward_percentage
+reward_amount
+status
+paid_at
+
+The reward calculation should run through a controlled monthly settlement process with an auditable ledger.
+
+25. Referral dashboard
+
+A user should see:
+
+My Referrals
+
+Referral Link
+[ Copy ]
+
+Total Referrals       27
+Active Referrals      19
+This Month            $24.50
+Pending               $8.20
+Paid                  $125.40
+
+And:
+
+Referral History
+
+User       Period       Earnings     Reward      Status
+---------------------------------------------------------
+User A     August       $3,000       $3.00       Paid
+User B     August       $1,500       $1.50       Pending
+26. Trading analytics
+
+Every trade should feed the analytics system.
+
+Users should be able to see:
+
+Total Trades
+Winning Trades
+Losing Trades
+Win Rate
+Profit
+Loss
+Net P&L
+Average Win
+Average Loss
+Profit Factor
+Drawdown
+Provider Performance
+Signal Performance
+Symbol Performance
+
+And filter by:
+
+Date
+Provider
+Symbol
+Account
+Strategy
+Signal
+27. Provider analytics
+
+Providers should see statistics about their signals.
+
+For example:
+
+Provider Performance
+
+Signals:          1,240
+Validated:        1,108
+Executed:           890
+Winning:            620
+Losing:             270
+Win Rate:          69.7%
+
+The system should distinguish between:
+
+raw signals
+validated signals
+signals users actually executed
+resulting trades
+
+This prevents confusing "signal accuracy" with actual user performance.
+
+28. Signal replay
+
+One of the advanced features we previously included is Signal Replay.
+
+This allows the system/admin/provider to inspect historical signal processing.
+
+Example:
+
+Signal Replay
+
+09:41:02
+Telegram message received
+
+09:41:02
+Signal detected
+
+09:41:03
+AI extraction completed
+
+09:41:03
+Provider DNA matched
+
+09:41:03
+Validation passed
+
+09:41:04
+Risk check passed
+
+09:41:04
+Execution requested
+
+09:41:05
+MetaApi accepted order
+
+This is extremely useful for debugging and auditing.
+
+29. Signal certification
+
+The platform can have a certification system for providers/signals.
+
+For example:
+
+Certified Provider
+Verified Strategy
+Verified Signal Source
+
+Certification should be based on defined platform criteria and historical evidence, not simply a marketing label.
+
+30. Provider marketplace
+
+The marketplace allows users to discover providers.
+
+Marketplace
+│
+├── Featured Providers
+├── Top Performing
+├── Most Followed
+├── New Providers
+└── Categories
+
+Provider profile:
+
+Provider Name
+Description
+Track Record
+Signal Count
+Performance
+Risk Profile
+Supported Markets
+Followers
+Certification
+
+Users can then follow/connect providers according to their subscription and platform rules.
+
+31. Admin platform
+
+The admin dashboard is the control center.
+
+Admin should be able to manage:
+
+Users
+View users
+Suspend users
+Activate users
+View KYC status
+View subscriptions
+View connected accounts
+View activity
+KYC
+Pending applications
+Approved
+Rejected
+Review documents
+Request resubmission
+Providers
+Create
+Edit
+Approve
+Suspend
+Monitor
+Review performance
+Signal sources
+Telegram sources
+Discord sources
+Email sources
+TradingView
+REST sources
+Signals
+Live signals
+Historical signals
+Failed signals
+Duplicate signals
+Rejected signals
+Trades
+All trades
+Execution status
+Broker status
+Errors
+Brokers
+MetaApi accounts
+Connected accounts
+Disconnected accounts
+Deployment status
+Trading status
+Subscriptions
+Plans
+Users
+Payments
+Renewals
+Expired subscriptions
+Referrals
+Referral users
+Rewards
+Monthly settlement
+Pending rewards
+Paid rewards
+System monitoring
+Queues
+Workers
+WebSockets
+Telegram connections
+MetaApi connections
+AI processing
+Failed jobs
+32. Admin financial system
+
+Admin needs a revenue dashboard.
+
+Revenue
+│
+├── Subscription Revenue
+├── Platform Revenue
+├── Referral Liability
+├── Net Platform Revenue
+├── Payment Fees
+└── Monthly Revenue
+
+The referral system should have its own ledger so the platform can determine exactly how much it owes before settlement.
+
+33. Security architecture
+
+Security is a first-class feature.
+
+The system should implement:
+
+Authentication
+Authorization
+Role-based access
+JWT/session security
+Password hashing
+2FA where applicable
+KYC protection
+Encrypted sensitive data
+Audit logs
+Rate limiting
+Input validation
+API validation
+Webhook verification
+CSRF protection where applicable
+CORS restrictions
+Secure headers
+Secret management
+
+Most importantly:
+
+MetaApi token
+
+Never in React.
+
+Never in Git.
+
+Never in the database as ordinary user data.
+
+It belongs to the protected backend environment/secret store.
+
+34. Audit logs
+
+Every sensitive action should produce an audit record.
+
+For example:
+
+Admin approved KYC
+User connected MT5
+User enabled automation
+Signal processed
+Trade execution requested
+Trade rejected
+Subscription activated
+Referral reward calculated
+Referral reward paid
+Provider suspended
+
+Each record should include:
+
+actor
+action
+resource
+timestamp
+IP/device information where appropriate
+result
+metadata
+35. Notification system
+
+Users need notifications for important events.
+
+Channels can include:
+
+In-app
+Email
+Push
+
+Events:
+
+Signal detected
+Signal executed
+Trade opened
+Trade closed
+Stop loss hit
+Take profit hit
+Broker disconnected
+KYC approved
+KYC rejected
+Subscription expiring
+Payment successful
+Referral reward credited
+36. User dashboard
+
+The user's main dashboard should answer:
+
+What is happening with my account right now?
+
+It should show:
+
+KYC Status
+Subscription
+Trading Environment
+Broker Connection
+Account Balance
+Equity
+Open Positions
+Recent Signals
+Recent Trades
+P&L
+Provider Performance
+Risk Status
+Referral Earnings
+Notifications
+37. User journey — complete
+
+Now let's put everything together.
+
+STEP 1 — Landing page
+
+User visits:
+
+SignalForge
+
+They understand:
+
+what the platform does
+how AI analyzes signals
+supported sources
+broker automation
+pricing
+security
+provider marketplace
+STEP 2 — Registration
+
+User creates:
+
+Name
+Email
+Password
+Referral Code (optional)
+
+System creates:
+
+User
+Profile
+Referral relationship
+STEP 3 — Email/account verification
+
+User verifies their account.
+
+Registration
+ ↓
+Email verification
+ ↓
+Account activated
+STEP 4 — KYC
+
+User enters:
+
+KYC Center
+
+Uploads supported identity document.
+
+Submitted
+ ↓
+Under Review
+ ↓
+Approved
+
+Dashboard changes:
+
+❌ Account Not Verified
+
+to:
+
+✓ Account Verified
+STEP 5 — Subscription
+
+Now the user selects a plan.
+
+Choose Plan
+ ↓
+Payment
+ ↓
+Webhook verification
+ ↓
+Subscription activated
+STEP 6 — Connect signal source
+
+User opens:
+
+Signal Sources
+
+Selects:
+
+Telegram
+
+Then connects the Telegram User Session.
+
+After authentication:
+
+Telegram Connected
+
+The system can discover the user's available chats/channels according to the permissions and integration.
+
+STEP 7 — Select providers/channels
+
+User chooses:
+
+Channel A
+Channel B
+Channel C
+
+and configures:
+
+Monitor: ON
+STEP 8 — Connect broker
+
+User goes to:
+
+Broker Accounts
+
+Selects:
+
+MT4 / MT5
+
+Connects their account through the MetaApi integration.
+
+The system obtains:
+
+metaapi_account_id
+
+and associates it with the user's SignalForge account.
+
+STEP 9 — Choose trading environment
+
+User selects:
+
+DEMO
+
+or:
+
+LIVE
+
+The environment is clearly displayed throughout the dashboard.
+
+STEP 10 — Configure trading rules
+
+User defines their automation profile.
+
+Risk settings
+Allowed providers
+Allowed symbols
+Minimum confidence
+Maximum trades
+Trading hours
+Auto execution
+STEP 11 — Signal arrives
+
+Telegram channel posts:
+
+EURUSD BUY
+...
+
+The Telegram listener receives it.
+
+STEP 12 — Ingestion
+Telegram
+ ↓
+Message Ingestion
+ ↓
+Store raw message
+ ↓
+Generate event
+STEP 13 — Signal detection
+
+AI/classification determines:
+
+Is this a trading signal?
+
+If:
+
+processing ends.
+
+If:
+
+continue.
+
+STEP 14 — Signal extraction
+
+The system extracts:
+
+Symbol
+Direction
+Entry
+SL
+TP
+Timeframe
+Provider
+Timestamp
+STEP 15 — Provider DNA
+
+The system identifies:
+
+Who sent it?
+How does this provider normally format signals?
+How has this provider performed?
+STEP 16 — Validation
+
+System checks the signal.
+
+Valid?
+Duplicate?
+Expired?
+Complete?
+Conflicting?
+Tradable?
+STEP 17 — AI confidence
+
+The AI engine produces structured analysis.
+
+For example:
+
+Signal
+EURUSD BUY
+
+Confidence
+87%
+
+Status
+Validated
+
+The score should be treated as a decision input, not as a guarantee of profitability.
+
+STEP 18 — Fan-out
+
+Suppose 2,000 users follow the provider.
+
+SignalForge does:
+
+ONE SIGNAL
+     │
+     ├── User A
+     ├── User B
+     ├── User C
+     ├── ...
+     └── User 2000
+
+Each user gets their own decision based on their rules.
+
+STEP 19 — User-specific risk processing
+
+Example:
+
+User A
+Risk = 1%
+Minimum confidence = 80%
+Auto = ON
+
+Signal:
+
+Confidence = 87%
+
+Passes.
+
+Another user:
+
+Minimum confidence = 95%
+
+Same signal:
+
+87%
+
+Blocked.
+
+Same signal. Different outcome.
+
+STEP 20 — Execution
+
+For the user who passed:
+
+Execution Engine
+ ↓
+Final validation
+ ↓
+MetaApi
+ ↓
+MT5
+ ↓
+Broker
+STEP 21 — Trade monitoring
+
+The system receives MetaApi events.
+
+Position opened
+ ↓
+Position updated
+ ↓
+SL/TP
+ ↓
+Position closed
+
+Everything is recorded.
+
+STEP 22 — Analytics
+
+The completed trade feeds:
+
+User analytics
+Provider analytics
+Signal analytics
+Strategy analytics
+Platform analytics
+STEP 23 — Referral calculation
+
+At the end of the relevant monthly period:
+
+Referred user's qualifying earnings
+        ↓
+0.1%
+        ↓
+Referral reward
+        ↓
+Platform-funded reward ledger
+        ↓
+Referrer
+
+The referred user's earnings are not reduced by this calculation.
+
+38. Complete system workflow
+
+The complete SignalForge ecosystem becomes:
+
+                         ┌──────────────────────┐
+                         │      SIGNAL SOURCES  │
+                         │ Telegram             │
+                         │ Discord              │
+                         │ Email                │
+                         │ TradingView           │
+                         │ REST/API              │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ MESSAGE INGESTION    │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ SIGNAL DETECTION     │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ AI SIGNAL ENGINE     │
+                         │ Parser               │
+                         │ Provider DNA         │
+                         │ Context              │
+                         │ Confidence           │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ VALIDATION ENGINE    │
+                         │ Duplicate            │
+                         │ Conflict             │
+                         │ Expiry               │
+                         │ Quality              │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ CONSENSUS ENGINE      │
+                         └──────────┬───────────┘
+                                    │
+                         ┌──────────▼───────────┐
+                         │ USER PERSONALIZATION │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ RISK ENGINE          │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ EXECUTION ENGINE     │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │       METAAPI        │
+                         └──────────┬───────────┘
+                                    │
+                              ┌─────┴─────┐
+                              ▼           ▼
+                            MT4         MT5
+                              │           │
+                              └─────┬─────┘
+                                    ▼
+                                  BROKER
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ TRADE STATE ENGINE   │
+                         └──────────┬───────────┘
+                                    │
+                  ┌─────────────────┼─────────────────┐
+                  ▼                 ▼                 ▼
+              Analytics          History          Replay
+39. The major platform modules
+
+The AI coding agent should understand that SignalForge consists of these major domains:
+
+Public
+Home
+How SignalForge Works
+Features
+Providers/Marketplace
+Pricing
+About
+FAQ
+Contact
+Login
+Registration
+User
+Dashboard
+Profile
+KYC
+Subscription
+Billing
+Signal Sources
+Telegram
+Providers
+Signals
+Signal Details
+Trading Accounts
+MetaApi Connection
+Positions
+Orders
+Trades
+Automation
+Risk Management
+Trading Rules
+Analytics
+Signal Replay
+Notifications
+Referral Center
+Referral History
+Security
+Activity/Audit
+Provider
+Provider Dashboard
+Provider Profile
+Signal Sources
+Signals
+Signal History
+Performance
+Analytics
+Followers
+Provider DNA
+Certification
+Marketplace settings
+Admin
+Admin Dashboard
+Users
+User Details
+KYC Management
+Subscriptions
+Payments
+Plans
+Referrals
+Referral Settlement
+Providers
+Provider Verification
+Marketplace
+Signal Monitoring
+Signal Sources
+Telegram Connections
+Broker Accounts
+MetaApi Monitoring
+Trades
+Execution Monitoring
+AI Monitoring
+Risk Monitoring
+Analytics
+Signal Replay
+Notifications
+Audit Logs
+System Settings
+Security
+System Health
+40. Recommended role model
+
+The backend should use RBAC.
+
+SUPER_ADMIN
+     │
+     ├── ADMIN
+     │
+     ├── COMPLIANCE/KYC
+     │
+     ├── FINANCE
+     │
+     ├── SUPPORT
+     │
+     └── OPERATIONS
+
+PROVIDER
+
+USER
+
+The actual roles should be permission-based rather than relying only on hardcoded page checks.
+
+For example:
+
+users.read
+users.update
+kyc.review
+payments.view
+referrals.settle
+providers.approve
+signals.monitor
+trades.view
+system.configure
+41. Backend architectural principle
+
+The AI agent must not create one giant Express application where everything calls everything else.
+
+The domains need to be separated.
+
+Authentication
+Users
+KYC
+Subscriptions
+Payments
+Referrals
+Sources
+Telegram
+Providers
+Signals
+AI
+Validation
+Consensus
+Risk
+Trading
+MetaApi
+Analytics
+Notifications
+Admin
+Audit
+
+Each domain communicates through defined services/events.
+
+42. Event-driven processing
+
+The signal system should be event-driven.
+
+Example:
+
+MESSAGE_RECEIVED
+       ↓
+SIGNAL_DETECTION_REQUESTED
+       ↓
+SIGNAL_DETECTED
+       ↓
+SIGNAL_ANALYSIS_REQUESTED
+       ↓
+SIGNAL_ANALYZED
+       ↓
+SIGNAL_VALIDATED
+       ↓
+SIGNAL_FANOUT_REQUESTED
+       ↓
+USER_RISK_CHECK_REQUESTED
+       ↓
+EXECUTION_REQUESTED
+       ↓
+METAAPI_EXECUTION
+       ↓
+TRADE_OPENED
+       ↓
+TRADE_UPDATED
+       ↓
+TRADE_CLOSED
+
+This is what allows SignalForge to scale when thousands of users are watching the same source.
+
+43. Database philosophy
+
+PostgreSQL should be the system of record.
+
+Major database domains:
+
+users
+roles
+permissions
+kyc
+subscriptions
+plans
+payments
+referrals
+referral_rewards
+providers
+provider_sources
+source_connections
+telegram_sessions
+telegram_channels
+messages
+signals
+signal_analysis
+signal_validations
+signal_subscriptions
+trading_rules
+risk_profiles
+broker_accounts
+metaapi_accounts
+orders
+positions
+trades
+execution_requests
+notifications
+analytics
+audit_logs
+system_events
+
+Redis/event infrastructure should handle high-speed temporary state, queues, caching, locks and real-time processing rather than replacing PostgreSQL as the primary source of truth.
+
+44. The most important architectural rule
+
+The AI coding agent must understand this:
+
+A signal is not automatically a trade.
+
+The progression is:
+
+MESSAGE
+   ↓
+POTENTIAL SIGNAL
+   ↓
+NORMALIZED SIGNAL
+   ↓
+ANALYZED SIGNAL
+   ↓
+VALIDATED SIGNAL
+   ↓
+USER-ELIGIBLE SIGNAL
+   ↓
+RISK-APPROVED SIGNAL
+   ↓
+EXECUTION REQUEST
+   ↓
+TRADE
+
+This distinction should exist throughout the database, backend, APIs, UI and audit system.
+
+45. What we are NOT building
+
+The AI agent must also understand what SignalForge is not.
+
+It is not:
+
+simply a Telegram bot
+simply a Telegram scraper
+simply an AI chatbot
+simply a MetaApi wrapper
+simply a copy-trading script
+simply a broker dashboard
+a system that blindly executes every message
+a system where the frontend talks directly to MetaApi
+
+It is an integrated signal intelligence + validation + personalization + risk + execution + analytics platform.
+
+46. Final product definition for the AI agent
+
+You can give your coding agent this as the core instruction:
+
+Build SignalForge as a production-grade multi-user SaaS trading signal intelligence and automation platform. SignalForge receives trading messages from connected external sources, beginning with Telegram User Sessions, detects and normalizes potential trading signals, uses AI and Provider DNA to understand and analyze them, validates signal quality, detects duplicates and conflicts, calculates confidence and consensus, and then applies each user's individual trading rules and risk controls. Only signals that pass all required checks can proceed to an execution request. Authorized execution requests are sent from the secure Express backend through MetaApi to the user's connected MT4/MT5 account. MetaApi account IDs are mapped to individual broker accounts in PostgreSQL, while MetaApi credentials remain server-side secrets. Real-time MetaApi events synchronize account, order and position state back into SignalForge.
+
+The platform must support manual and automated trading modes, Demo and Live environments, multiple signal sources, multiple providers, provider reputation and Provider DNA, signal analytics, provider analytics, signal replay, certification, marketplace functionality, subscription plans, payments, KYC verification, referrals, notifications, audit logs, administration, security, and platform monitoring.
+
+KYC is a mandatory access-control layer. Users must complete KYC before subscribing, activating protected functionality, accessing referrals, connecting/activating trading functionality, or performing other configurable protected actions. Users who are not verified must see a persistent account-verification status and be prompted to complete KYC.
+
+The referral system uses a platform-funded reward model. The referred user's earnings are not reduced. At the end of each qualifying monthly period, SignalForge calculates the referral reward based on the referred user's qualifying monthly earnings using the configured referral percentage, initially 0.1%, and records the liability and settlement in an auditable referral ledger funded from SignalForge's platform income.
+
+The platform must be event-driven and designed to process one incoming source message once and fan the resulting validated signal out to many subscribed users, with idempotency, duplicate detection, queues/workers, retries and per-user personalization. A single signal must never be unnecessarily reprocessed independently for every subscriber.
+
+The frontend must never contain MetaApi secrets or privileged backend credentials. React communicates only with the SignalForge API. Express owns authentication, authorization, business logic, AI orchestration, risk controls, MetaApi integration, payment verification, KYC workflow, referral calculations, audit logging and execution orchestration. PostgreSQL is the primary persistent data store, with appropriate event/queue/cache infrastructure for asynchronous and real-time workloads.
+
+Every critical action must be auditable. The system must be designed for production reliability, security, observability, graceful failure, idempotency, concurrency control, real-time updates and future horizontal scaling.
