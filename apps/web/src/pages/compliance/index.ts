@@ -1,0 +1,12 @@
+export { ComplianceDashboard } from './ComplianceDashboard';
+export { KYCQueue } from './KYCQueue';
+export { PendingKYC } from './PendingKYC';
+export { UnderReviewKYC } from './UnderReviewKYC';
+export { VerifiedKYC } from './VerifiedKYC';
+export { RejectedKYC } from './RejectedKYC';
+export { SuspendedKYC } from './SuspendedKYC';
+export { DocumentTypes } from './DocumentTypes';
+export { VerificationProviders } from './VerificationProviders';
+export { RiskFlags } from './RiskFlags';
+export { ComplianceReports } from './ComplianceReports';
+export { KYCAuditTrail } from './KYCAuditTrail';

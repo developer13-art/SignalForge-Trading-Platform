@@ -1,0 +1,11 @@
+export { KYCStatusDashboard } from './KYCStatusDashboard';
+export { KYCIntroduction } from './KYCIntroduction';
+export { PersonalInformation } from './PersonalInformation';
+export { IdentityDocument } from './IdentityDocument';
+export { DocumentVerification } from './DocumentVerification';
+export { SelfieVerification } from './SelfieVerification';
+export { KYCReviewStatus } from './KYCReviewStatus';
+export { VerificationResult } from './VerificationResult';
+export { KYCResubmission } from './KYCResubmission';
+export { KYCReverification } from './KYCReverification';
+export { KYCHelp } from './KYCHelp';

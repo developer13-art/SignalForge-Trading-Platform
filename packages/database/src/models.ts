@@ -1,0 +1,12 @@
+export type { User, UserProfile, Role, Permission, UserRole, UserSession } from '@prisma/client';
+export type { KycApplication, KycDocument, KycVerification, KycAuditLog } from '@prisma/client';
+export type { Broker, BrokerAccount, AccountSnapshot } from '@prisma/client';
+export type { SignalSource, TelegramConnection, TelegramChannel, SourceMessage } from '@prisma/client';
+export type { Signal, SignalParse, SignalValidation, SignalConsensus } from '@prisma/client';
+export type { Provider, ProviderCertification, ProviderSubscription, ProviderDna, ProviderDnaRule } from '@prisma/client';
+export type { Trade, TradeEvent, RiskProfile, AutomationRule } from '@prisma/client';
+export type { PerformancePeriod, PerformanceMetric, EquitySnapshot } from '@prisma/client';
+export type { ReferralCode, ReferralRelationship, ReferralReward, ReferralWallet, ReferralLedger, ReferralSettlement } from '@prisma/client';
+export type { SubscriptionPlan, Subscription, Payment } from '@prisma/client';
+export type { WithdrawalRequest, Notification, Job, SystemSetting, ApiKey } from '@prisma/client';
+export type { AuditLog } from '@prisma/client';

@@ -1,19 +1,33 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {
-    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "build": "pnpm run typecheck && pnpm -r --if-present run build",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
-  },
+  "name": "signalforge",
+  "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@replit/connectors-sdk": "^0.4.1"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "db:migrate": "pnpm --filter @signalforge/database db:migrate",
+    "db:generate": "pnpm --filter @signalforge/database db:generate",
+    "db:seed": "pnpm --filter @signalforge/database db:seed",
+    "clean": "turbo run clean"
   },
   "devDependencies": {
-    "prettier": "^3.9.6",
-    "typescript": "~5.9.3"
-  }
+    "turbo": "^2.1.0",
+    "typescript": "^5.5.0",
+    "@types/node": "^22.0.0",
+    "prettier": "^3.3.0",
+    "eslint": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.7.0"
 }

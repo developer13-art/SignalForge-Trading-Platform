@@ -1,0 +1,11 @@
+export { Home } from './Home';
+export { HowSignalForgeWorks } from './HowSignalForgeWorks';
+export { Features } from './Features';
+export { Pricing } from './Pricing';
+export { Enterprise } from './Enterprise';
+export { WhiteLabel } from './WhiteLabel';
+export { APIPlatform } from './APIPlatform';
+export { Security } from './Security';
+export { About } from './About';
+export { Contact } from './Contact';
+export { FAQ } from './FAQ';

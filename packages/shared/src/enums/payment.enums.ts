@@ -1,0 +1,16 @@
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum SubscriptionStatus {
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  PAST_DUE = 'PAST_DUE',
+  GRACE_PERIOD = 'GRACE_PERIOD',
+  EXPIRED = 'EXPIRED',
+  CANCELLED = 'CANCELLED',
+}

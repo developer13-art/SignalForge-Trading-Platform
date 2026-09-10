@@ -1,0 +1,26 @@
+// packages/config/src/permissions.ts
+export const PERMISSIONS = {
+  // User permissions
+  VIEW_KYC: 'VIEW_KYC',
+  REVIEW_KYC: 'REVIEW_KYC',
+  APPROVE_KYC: 'APPROVE_KYC',
+  
+  // Management permissions
+  MANAGE_USERS: 'MANAGE_USERS',
+  MANAGE_PROVIDERS: 'MANAGE_PROVIDERS',
+  MANAGE_REFERRALS: 'MANAGE_REFERRALS',
+  MANAGE_PAYMENTS: 'MANAGE_PAYMENTS',
+  MANAGE_BROKERS: 'MANAGE_BROKERS',
+  MANAGE_SETTINGS: 'MANAGE_SETTINGS',
+  MANAGE_SIGNALS: 'MANAGE_SIGNALS',
+  MANAGE_TRADES: 'MANAGE_TRADES',
+  
+  // View permissions
+  VIEW_AUDIT_LOGS: 'VIEW_AUDIT_LOGS',
+  VIEW_ANALYTICS: 'VIEW_ANALYTICS',
+  VIEW_SYSTEM_HEALTH: 'VIEW_SYSTEM_HEALTH',
+} as const;
+
+export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
+
+export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS);

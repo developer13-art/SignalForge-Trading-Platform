@@ -1,0 +1,23 @@
+/* Theme transition classes */
+.theme-transition {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar theme */
+.sidebar-dark {
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+}
+
+/* Card theme */
+.card-light {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.card-dark {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
