@@ -103,7 +103,7 @@ export class AuthService {
 
     // Generate tokens
     const tokens = tokenService.generateTokens(user.id, user.email);
-    await tokenService.createSession(user.id, tokens.refreshToken, deviceInfo, ipAddress, userAgent);
+    await tokenService.createSession(user.id, tokens, deviceInfo, ipAddress, userAgent);
 
     logger.info(`User registered: ${user.email}`);
 
@@ -149,7 +149,7 @@ export class AuthService {
     }
 
     const tokens = tokenService.generateTokens(user.id, user.email);
-    await tokenService.createSession(user.id, tokens.refreshToken, deviceInfo, ipAddress, userAgent);
+    await tokenService.createSession(user.id, tokens, deviceInfo, ipAddress, userAgent);
 
     await prisma.user.update({
       where: { id: user.id },
@@ -174,24 +174,29 @@ export class AuthService {
     };
   }
 
-  async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+    async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
     const payload = tokenService.verifyRefreshToken(refreshToken);
-    const tokenHash = tokenService.hashToken(refreshToken);
-
-    const isValid = await tokenService.validateSession(tokenHash, payload.userId);
-    if (!isValid) {
+  
+    // Find the session using the refresh token hash
+    const session = await tokenService.findSessionByRefreshToken(refreshToken, payload.userId);
+    if (!session) {
       throw new AppError('Invalid refresh token', 401);
     }
-
+  
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
     });
-
+  
     if (!user || user.status !== 'ACTIVE') {
       throw new AppError('User not found or inactive', 401);
     }
-
+  
+    // Generate new tokens
     const tokens = tokenService.generateTokens(user.id, user.email);
+  
+    // Rotate the same session with new token hashes
+    await tokenService.rotateSession(session.id, tokens);
+  
     return tokens;
   }
 
