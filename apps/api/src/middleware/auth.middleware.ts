@@ -1,10 +1,9 @@
-// apps/api/src/middleware/auth.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { prisma } from '../config/database';
 import { AppError } from './error.middleware';
-import { logger } from '@signalforge/logger';
+import { tokenService } from '../services/auth/token.service';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -20,46 +19,27 @@ export function requireAuthenticated() {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const authHeader = req.headers.authorization;
-      
+
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new AppError('Authentication required', 401);
       }
 
       const token = authHeader.split(' ')[1];
-      
       if (!token) {
         throw new AppError('Authentication token missing', 401);
       }
 
-      const decoded = jwt.verify(token, env.JWT_SECRET) as {
-        userId: string;
-        email: string;
-      };
+      const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string; email: string };
 
-      // Check if session is valid
-      const session = await prisma.userSession.findFirst({
-        where: {
-          userId: decoded.userId,
-          tokenHash: hashToken(token),
-          revokedAt: null,
-          expiresAt: { gt: new Date() },
-        },
-      });
-
-      if (!session) {
+      // Validate token by hash via token service
+      const isValid = await tokenService.validateAccessToken(token, decoded.userId);
+      if (!isValid) {
         throw new AppError('Session expired or invalid', 401);
       }
 
-      // Get user with roles
       const user = await prisma.user.findUnique({
         where: { id: decoded.userId },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
+        include: { roles: { include: { role: true } } },
       });
 
       if (!user) {
@@ -73,16 +53,10 @@ export function requireAuthenticated() {
       req.user = {
         id: user.id,
         email: user.email,
-        roles: user.roles.map(ur => ur.role.name),
+        roles: user.roles.map((ur) => ur.role.name),
         kycStatus: user.kycStatus,
         accountType: user.accountType,
       };
-
-      // Update last seen
-      await prisma.userSession.update({
-        where: { id: session.id },
-        data: { lastSeenAt: new Date() },
-      });
 
       next();
     } catch (error) {
@@ -95,9 +69,4 @@ export function requireAuthenticated() {
       }
     }
   };
-}
-
-function hashToken(token: string): string {
-  const crypto = require('crypto');
-  return crypto.createHash('sha256').update(token).digest('hex');
 }
